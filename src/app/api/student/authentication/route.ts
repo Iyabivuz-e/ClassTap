@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
 
     //Getting the student based on the card id assigned to them...
     const student = await students.findOne({ card_id: cardId });
+    
 
     if (student) {
       return NextResponse.json(
