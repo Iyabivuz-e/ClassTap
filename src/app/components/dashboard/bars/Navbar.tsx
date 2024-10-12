@@ -5,6 +5,7 @@ import Image from 'next/image';
 import profile from "../../../../../public/images/imggggh.jpg"
 import Theme from '@/app/helpers/Themes';
 import Notifications from './Notifications';
+import Link from 'next/link';
 
 interface NavBarProp {
   handleToggle: () => void;
@@ -106,7 +107,7 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
               <a>Settings</a>
             </li>
             <li>
-              <a>Logout</a>
+              <Link href="/">Logout</Link>
             </li>
           </ul>
         </div>
