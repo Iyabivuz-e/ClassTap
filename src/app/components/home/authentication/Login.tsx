@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import axios from "axios"; // For making API calls
+import axios from "axios";
 
 const Login = () => {
   const router = useRouter();
@@ -21,7 +21,7 @@ const Login = () => {
     const password = formData.get("password");
 
     try {
-      // Make API request to login route (assuming a POST request to /api/login)
+      // API request to login route
       const response = await axios.post("/api/directors/auth/login", {
         email,
         password,
@@ -37,7 +37,7 @@ const Login = () => {
         err?.response?.data?.message || "Login failed. Please try again."
       );
     } finally {
-      setLoading(false); // Stop loading after the request is complete
+      setLoading(false);
     }
   };
 
@@ -57,7 +57,7 @@ const Login = () => {
         </div>
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
           <form onSubmit={handleLogin} className="card-body">
-            {/* Email Input */}
+
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -70,7 +70,7 @@ const Login = () => {
                 required
               />
             </div>
-            {/* Password Input */}
+
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Password</span>
@@ -89,19 +89,17 @@ const Login = () => {
               </label>
             </div>
 
-            {/* Error Message */}
             {error && (
-              <div className="alert alert-error my-2">
+              <div className="btn btn-error my-2 ">
                 <span>{error}</span>
               </div>
             )}
 
-            {/* Submit Button with Spinner */}
             <div className="form-control mt-6">
               <button
                 type="submit"
                 className="btn btn-primary flex items-center justify-center"
-                disabled={loading} // Disable button when loading
+                disabled={loading}
               >
                 {loading ? (
                   <svg
@@ -138,4 +136,3 @@ const Login = () => {
 
 export default Login;
 
-//api/directors/auth/login

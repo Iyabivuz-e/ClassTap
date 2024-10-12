@@ -32,34 +32,6 @@ const Notifications = ({ notification }: NavBarProp) => {
           <p> Niyibikora Obed is present in the school </p>
           <p> 1h ago </p>
         </div>
-        <div className="bg-base-100 px-3 py-2 rounded-md">
-          <p> Niyibikora Obed is present in the school </p>
-          <p> 1h ago </p>
-        </div>
-        <div className="bg-base-100 px-3 py-2 rounded-md">
-          <p> Niyibikora Obed is present in the school </p>
-          <p> 1h ago </p>
-        </div>
-        <div className="bg-base-100 px-3 py-2 rounded-md">
-          <p> Niyibikora Obed is present in the school </p>
-          <p> 1h ago </p>
-        </div>
-        <div className="bg-base-100 px-3 py-2 rounded-md">
-          <p> Niyibikora Obed is present in the school </p>
-          <p> 1h ago </p>
-        </div>
-        <div className="bg-base-100 px-3 py-2 rounded-md">
-          <p> Niyibikora Obed is present in the school </p>
-          <p> 1h ago </p>
-        </div>
-        <div className="bg-base-100 px-3 py-2 rounded-md">
-          <p> Niyibikora Obed is present in the school </p>
-          <p> 1h ago </p>
-        </div>
-        <div className="bg-base-100 px-3 py-2 rounded-md">
-          <p> Niyibikora Obed is present in the school </p>
-          <p> 1h ago </p>
-        </div>
       </div>
     </div>
   );
