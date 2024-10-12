@@ -3,19 +3,42 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import axios from "axios"; // For making API calls
 
 const Login = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true); 
+    setLoading(true);
+    setError(null); // Clear previous errors
 
-    setTimeout(() => {
-      router.push("/director-of-study/dashboard"); 
-      setLoading(false); 
-    }, 2000); 
+    // Collect the form data (e.g., email and password)
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    try {
+      // Make API request to login route (assuming a POST request to /api/login)
+      const response = await axios.post("/api/directors/auth/login", {
+        email,
+        password,
+      });
+
+      // Check if the login is successful and redirect to the dashboard
+      if (response.status === 201) {
+        router.push("/director-of-study/dashboard");
+      }
+    } catch (err: any) {
+      // Handle error, display an appropriate error message
+      setError(
+        err?.response?.data?.message || "Login failed. Please try again."
+      );
+    } finally {
+      setLoading(false); // Stop loading after the request is complete
+    }
   };
 
   return (
@@ -25,7 +48,7 @@ const Login = () => {
           <p className="py-6 text-lg">
             Please log in to view your dashboard. No account?
             <Link
-              href="#"
+              href="/register"
               className="label-text-alt link link-hover ml-2 text-blue-400"
             >
               Register here
@@ -41,6 +64,7 @@ const Login = () => {
               </label>
               <input
                 type="email"
+                name="email"
                 placeholder="email"
                 className="input input-bordered"
                 required
@@ -53,6 +77,7 @@ const Login = () => {
               </label>
               <input
                 type="password"
+                name="password"
                 placeholder="password"
                 className="input input-bordered"
                 required
@@ -63,6 +88,14 @@ const Login = () => {
                 </Link>
               </label>
             </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="alert alert-error my-2">
+                <span>{error}</span>
+              </div>
+            )}
+
             {/* Submit Button with Spinner */}
             <div className="form-control mt-6">
               <button
@@ -104,3 +137,5 @@ const Login = () => {
 };
 
 export default Login;
+
+//api/directors/auth/login

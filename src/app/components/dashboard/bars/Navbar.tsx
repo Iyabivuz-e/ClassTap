@@ -1,18 +1,19 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react'
-import Image from 'next/image';
-import profile from "../../../../../public/images/imggggh.jpg"
-import Theme from '@/app/helpers/Themes';
-import Notifications from './Notifications';
-import Link from 'next/link';
+import React, { useState } from "react";
+import Image from "next/image";
+import profile from "../../../../../public/images/imggggh.jpg";
+import Theme from "@/app/helpers/Themes";
+import Notifications from "./Notifications";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface NavBarProp {
   handleToggle: () => void;
 }
 
 const Navbar = ({ handleToggle }: NavBarProp) => {
-
+  const router = useRouter();
   const [notification, setNotification] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       const savedState = localStorage.getItem("notification-toggled");
@@ -25,7 +26,24 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
   const handleToggleNotification = () => {
     const newState = !notification;
     setNotification(newState);
-    localStorage.setItem("notification-toggled", JSON.stringify(newState)); // Save new state to localStorage
+    localStorage.setItem("notification-toggled", JSON.stringify(newState));
+  };
+
+  const handleLogOut = async () => {
+    try {
+      // Send a request to the server to log out
+      const response = await axios.get("/api/directors/auth/logout");
+
+      // Optionally, handle the response message
+      if (response.data.sucess) {
+        console.log(response.data.message);
+      }
+
+      // Redirect to login or homepage after logout
+      router.push("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
@@ -107,7 +125,7 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
               <a>Settings</a>
             </li>
             <li>
-              <Link href="/">Logout</Link>
+              <button onClick={handleLogOut}>Logout</button>
             </li>
           </ul>
         </div>
@@ -119,7 +137,4 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
   );
 };
 
-export default Navbar
-
-
-
+export default Navbar;
