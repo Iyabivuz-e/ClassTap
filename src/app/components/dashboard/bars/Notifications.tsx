@@ -11,7 +11,7 @@ const Notifications = ({ notification }: NavBarProp) => {
     <div
       className={`${
         notification ? "opacity-100 " : "opacity-0"
-      } rounded-md flex transition-all flex-col duration-400 bg-base-200 shadow-md h-[550px] w-[400px] max-sm:w-full absolute top-[70px] max-sm:right-0 right-3 px-2
+      } rounded-md flex transition-all flex-col duration-400 bg-base-200 shadow-md h-[550px] w-[400px] max-sm:w-full absolute top-[70px] max-sm:right-0 right-3 px-2 overflow-hidden
       `}
     >
       <div className="flex justify-between gap-2 items-center w-full py-4">

@@ -28,7 +28,7 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
   };
 
   return (
-    <div className="navbar bg-base-100 sticky top-0 left-0">
+    <div className="navbar bg-base-100 sticky top-0 ">
       <div className="navbar-start">
         <div className="dropdown" onClick={handleToggle}>
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
