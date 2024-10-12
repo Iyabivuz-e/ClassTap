@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 
@@ -10,10 +10,9 @@ const Notifications = ({ notification }: NavBarProp) => {
   return (
     <div
       className={`${
-        notification
-          ? "opacity-100 transition-all duration-400 rounded-md flex flex-col bg-base-200 shadow-md h-[550px] w-[400px] max-sm:w-full absolute top-[70px] max-sm:right-0 right-3 px-2"
-          : "opacity-0 rounded-md flex flex-col duration-400 bg-base-200 shadow-md h-[550px] w-[400px] max-sm:w-full absolute top-[70px] max-sm:right-0 right-3 px-2"
-      }`}
+        notification ? "opacity-100 " : "opacity-0"
+      } rounded-md flex transition-all flex-col duration-400 bg-base-200 shadow-md h-[550px] w-[400px] max-sm:w-full absolute top-[70px] max-sm:right-0 right-3 px-2
+      `}
     >
       <div className="flex justify-between gap-2 items-center w-full py-4">
         <h1 className="text-3xl max-sm:text-xl font-bold">Notifications</h1>
@@ -39,5 +38,3 @@ const Notifications = ({ notification }: NavBarProp) => {
 };
 
 export default Notifications;
-
-
