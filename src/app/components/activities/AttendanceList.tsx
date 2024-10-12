@@ -2,7 +2,7 @@ import React from 'react'
 
 const AttendanceList = () => {
   return (
-    <div className="mt-7">
+    <div className="mt-7 -z-50">
       <h1>Attendance List</h1>
       <div className="overflow-x-auto mt-3">
         <table className="table">

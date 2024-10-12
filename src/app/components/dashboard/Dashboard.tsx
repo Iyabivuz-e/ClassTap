@@ -19,7 +19,7 @@ const Dashboard = () => {
   const handleToggle = () => {
     const newState = !clicked;
     setClicked(newState);
-    localStorage.setItem("sidebar-toggled", JSON.stringify(newState)); // Save new state to localStorage
+    localStorage.setItem("sidebar-toggled", JSON.stringify(newState)); 
   };
 
   return (

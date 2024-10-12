@@ -1,18 +1,34 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image';
 import profile from "../../../../../public/images/imggggh.jpg"
 import Theme from '@/app/helpers/Themes';
+import Notifications from './Notifications';
 
 interface NavBarProp {
-  handleToggle : () => void;
+  handleToggle: () => void;
 }
 
-const Navbar = ({handleToggle }: NavBarProp) => {
+const Navbar = ({ handleToggle }: NavBarProp) => {
+
+  const [notification, setNotification] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("notification-toggled");
+      return savedState ? JSON.parse(savedState) : false;
+    }
+    return false;
+  });
+
+  //handle toggle notifications
+  const handleToggleNotification = () => {
+    const newState = !notification;
+    setNotification(newState);
+    localStorage.setItem("notification-toggled", JSON.stringify(newState)); // Save new state to localStorage
+  };
 
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-base-100 sticky top-0 left-0">
       <div className="navbar-start">
         <div className="dropdown" onClick={handleToggle}>
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
@@ -34,10 +50,15 @@ const Navbar = ({handleToggle }: NavBarProp) => {
         </div>
       </div>
       <div className="navbar-center">
-        <a className="btn btn-ghost text-xl max-sm:hidden">Director of Studies</a>
+        <a className="btn btn-ghost text-xl max-sm:hidden">
+          Director of Studies
+        </a>
       </div>
       <div className="navbar-end">
-        <button className="btn btn-ghost btn-circle">
+        <button
+          className="btn btn-ghost btn-circle"
+          onClick={handleToggleNotification}
+        >
           <div className="indicator">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -91,9 +112,11 @@ const Navbar = ({handleToggle }: NavBarProp) => {
         </div>
         <Theme />
       </div>
+
+      <Notifications notification={notification} />
     </div>
   );
-}
+};
 
 export default Navbar
 
