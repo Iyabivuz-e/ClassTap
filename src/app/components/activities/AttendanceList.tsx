@@ -14,6 +14,7 @@ const AttendanceList = () => {
               <th>Student Id</th>
               <th>Card Id</th>
               <th>Status</th>
+              <th>In Time</th>
             </tr>
           </thead>
           <tbody>
@@ -24,6 +25,7 @@ const AttendanceList = () => {
               <td>1234</td>
               <td>ABC123</td>
               <td className="text-green-500">Present</td>
+              <td>8:10 AM</td>
             </tr>
             {/* row 2 */}
             <tr>
@@ -32,6 +34,7 @@ const AttendanceList = () => {
               <td>23456</td>
               <td>HGS234</td>
               <td className="text-green-500">present</td>
+              <td>8:15 AM</td>
             </tr>
             {/* row 3 */}
             <tr>
@@ -40,6 +43,7 @@ const AttendanceList = () => {
               <td>34567</td>
               <td>EFG345</td>
               <td className="text-red-500">Absent</td>
+              <td>8:20 AM</td>
             </tr>
           </tbody>
         </table>
