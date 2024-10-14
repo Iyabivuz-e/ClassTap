@@ -11,7 +11,7 @@ interface Student {
   student_name: string;
   student_id: string;
   card_id: string;
-  attendance_status: AttendanceStatus[]; // Array of attendance status
+  attendance_status: AttendanceStatus[]; 
 }
 
 const AttendanceList = () => {
@@ -56,24 +56,39 @@ const AttendanceList = () => {
           </thead>
           {/* Table body */}
           <tbody>
-            {students.map((student, index) => (
-              <tr key={index} className="bg-base-200">
-                <th>{index + 1}</th>
-                <td>{student.student_name}</td>
-                <td>{student.student_id}</td>
-                <td>{student.card_id}</td>
-                <td className={`${student.attendance_status[0].status === "present"? "text-green-500": "text-red-500"}`}>
-                  {student.attendance_status.length > 0
-                    ? student.attendance_status[0].status
-                    : "Absent"}
-                </td>
-                <td>
-                  {student.attendance_status.length > 0
-                    ? formatTime(student.attendance_status[0].date)
-                    : "N/A"}
-                </td>
-              </tr>
-            ))}
+            {students.map((student, index) => {
+              // Find the latest attendance record
+              const latestAttendance = student.attendance_status.reduce(
+                (latest, current) => {
+                  return new Date(current.date) > new Date(latest.date)
+                    ? current
+                    : latest;
+                }
+              );
+
+              return (
+                <tr key={index} className="bg-base-200">
+                  <th>{index + 1}</th>
+                  <td>{student.student_name}</td>
+                  <td>{student.student_id}</td>
+                  <td>{student.card_id}</td>
+                  <td
+                    className={
+                      latestAttendance?.status === "present"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }
+                  >
+                    {latestAttendance ? latestAttendance.status : "Absent"}
+                  </td>
+                  <td>
+                    {latestAttendance?.status === "present"
+                      ? formatTime(latestAttendance.date)
+                      : "N/A"}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -82,5 +97,3 @@ const AttendanceList = () => {
 };
 
 export default AttendanceList;
-
-// "text-green-500"
