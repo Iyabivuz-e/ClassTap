@@ -1,12 +1,49 @@
-import React from 'react'
+"use client";
+
+import React, { useEffect, useState } from "react";
+
+interface AttendanceStatus {
+  date: string; // ISO date string
+  status: string;
+}
+
+interface Student {
+  student_name: string;
+  student_id: string;
+  card_id: string;
+  attendance_status: AttendanceStatus[]; // Array of attendance status
+}
 
 const AttendanceList = () => {
+  const [students, setStudents] = useState<Student[]>([]);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const response = await fetch("/api/student/get-all-students");
+      const data = await response.json();
+      setStudents(data.students);
+    };
+
+    fetchStudents();
+  }, []);
+
+  // Function to format the time
+  const formatTime = (dateString: string): string => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    return date.toLocaleString("en-US", options);
+  };
+
   return (
     <div className="mt-7 -z-50">
       <h1>Attendance List</h1>
       <div className="overflow-x-auto mt-3">
         <table className="table">
-          {/* head */}
+          {/* Table header */}
           <thead>
             <tr>
               <th></th>
@@ -17,39 +54,33 @@ const AttendanceList = () => {
               <th>In Time</th>
             </tr>
           </thead>
+          {/* Table body */}
           <tbody>
-            {/* row 1 */}
-            <tr className="bg-base-200">
-              <th>1</th>
-              <td>Dieudonne Iyabivuze</td>
-              <td>1234</td>
-              <td>ABC123</td>
-              <td className="text-green-500">Present</td>
-              <td>8:10 AM</td>
-            </tr>
-            {/* row 2 */}
-            <tr>
-              <th>2</th>
-              <td>Niyibikora Obed</td>
-              <td>23456</td>
-              <td>HGS234</td>
-              <td className="text-green-500">present</td>
-              <td>8:15 AM</td>
-            </tr>
-            {/* row 3 */}
-            <tr>
-              <th>3</th>
-              <td>Emmanuel Nsengiyumva</td>
-              <td>34567</td>
-              <td>EFG345</td>
-              <td className="text-red-500">Absent</td>
-              <td>8:20 AM</td>
-            </tr>
+            {students.map((student, index) => (
+              <tr key={index} className="bg-base-200">
+                <th>{index + 1}</th>
+                <td>{student.student_name}</td>
+                <td>{student.student_id}</td>
+                <td>{student.card_id}</td>
+                <td className={`${student.attendance_status[0].status === "present"? "text-green-500": "text-red-500"}`}>
+                  {student.attendance_status.length > 0
+                    ? student.attendance_status[0].status
+                    : "Absent"}
+                </td>
+                <td>
+                  {student.attendance_status.length > 0
+                    ? formatTime(student.attendance_status[0].date)
+                    : "N/A"}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
     </div>
   );
-}
+};
 
-export default AttendanceList
+export default AttendanceList;
+
+// "text-green-500"
