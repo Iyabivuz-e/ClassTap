@@ -1,10 +1,16 @@
-"use client"
+"use client";
 
 import React from "react";
 import Students from "./Students";
 import Statistics from "./Statistics";
+import Loader from "@/app/helpers/Loader";
+import { useStudentContext } from "@/app/context/StudentContext";
 
 const Activity = () => {
+  const { loading } = useStudentContext();
+
+  if (loading) return <Loader />;
+
   return (
     <div className="w-full">
       <div className="text-center mt-8 ">

@@ -7,15 +7,15 @@ import Loader from "./helpers/Loader";
 
 export default function HomePage() {
 
-  const [loading, setLoading] = useState(true); // Set loading to true initially
+  const [loading, setLoading] = useState(true); 
 
   // Simulate loading delay
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(false); // Hide preloader after 2 seconds
-    }); // Adjust the time as necessary
+      setLoading(false); 
+    });
 
-    return () => clearTimeout(timer); // Clean up timer on unmount
+    return () => clearTimeout(timer); 
   }, []);
 
   const pageTitle = "Home - Attendance.";
@@ -27,7 +27,7 @@ export default function HomePage() {
         <meta name="description" content="Home - Attendance." />
       </Head>
 
-      {loading ? ( // Conditional rendering based on loading state
+      {loading ? ( 
         <Loader />
       ) : (
         <div className="bg-base-100 min-h-screen flex flex-col items-center justify-center">

@@ -1,31 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-
-interface AttendanceStatus {
-  date: string; // ISO date string
-  status: string;
-}
-
-interface Student {
-  student_name: string;
-  student_id: string;
-  card_id: string;
-  attendance_status: AttendanceStatus[]; 
-}
+import React from "react";
+import { useStudentContext } from "@/app/context/StudentContext";
 
 const AttendanceList = () => {
-  const [students, setStudents] = useState<Student[]>([]);
-
-  useEffect(() => {
-    const fetchStudents = async () => {
-      const response = await fetch("/api/student/get-all-students");
-      const data = await response.json();
-      setStudents(data.students);
-    };
-
-    fetchStudents();
-  }, []);
+  const { students, error } = useStudentContext();
 
   // Function to format the time
   const formatTime = (dateString: string): string => {
@@ -37,6 +16,8 @@ const AttendanceList = () => {
     };
     return date.toLocaleString("en-US", options);
   };
+
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="mt-7 -z-50">
@@ -57,7 +38,6 @@ const AttendanceList = () => {
           {/* Table body */}
           <tbody>
             {students.map((student, index) => {
-              // Find the latest attendance record
               const latestAttendance = student.attendance_status.reduce(
                 (latest, current) => {
                   return new Date(current.date) > new Date(latest.date)
