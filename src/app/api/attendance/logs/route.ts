@@ -36,25 +36,42 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Attendance already taken" });
     }
 
+    const attendanceTimestamp = timestamp ? new Date(timestamp) : new Date(); //Attendance timestamp
+
     const attendance = new Attendances({
       studentId: student.student_id,
       timestamp: timestamp ? new Date(timestamp) : new Date(),
       status: "present",
-      attendanceStatus: (student.attendance_status.status = "present"), //this is not working
     });
 
     const savedAttendance = await attendance.save();
 
-    //updating a student's attendance status to "present" for today
+    // //updating a student's attendance status to "present" for today
+    // const updatedStudent = await Students.findOneAndUpdate(
+    //   student._id,
+    //   {
+    //     $set: {
+    //       "attendance_status.$[elem].status": "present",
+    //     },
+    //   },
+    //   {
+    //     arrayFilters: [{ "elem.date": { $gte: today } }],
+    //     new: true,
+    //   }
+    // );
+
+    // Update or push attendance status with the exact timestamp
     const updatedStudent = await Students.findOneAndUpdate(
-      student._id,
+      { _id: student._id },
       {
-        $set: {
-          "attendance_status.$[elem].status": "present",
+        $push: {
+          attendance_status: {
+            date: attendanceTimestamp, // Use the attendance timestamp
+            status: "present",
+          },
         },
       },
       {
-        arrayFilters: [{ "elem.date": { $gte: today } }],
         new: true,
       }
     );
@@ -65,7 +82,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
 
     return NextResponse.json(
       {
