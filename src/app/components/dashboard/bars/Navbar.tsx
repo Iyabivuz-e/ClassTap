@@ -14,7 +14,7 @@ interface NavBarProp {
 
 const Navbar = ({ handleToggle }: NavBarProp) => {
   const router = useRouter();
-  const [notification, setNotification] = useState<boolean>(() => {
+  const [notifs, setNotifs] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       const savedState = localStorage.getItem("notification-toggled");
       return savedState ? JSON.parse(savedState) : false;
@@ -24,8 +24,8 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
 
   //handle toggle notifications
   const handleToggleNotification = () => {
-    const newState = !notification;
-    setNotification(newState);
+    const newState = !notifs;
+    setNotifs(newState);
     localStorage.setItem("notification-toggled", JSON.stringify(newState));
   };
 
@@ -132,7 +132,7 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
         <Theme />
       </div>
 
-      <Notifications notification={notification} />
+      <Notifications notifs={notifs} />
     </div>
   );
 };

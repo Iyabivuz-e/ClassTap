@@ -4,27 +4,20 @@ import { useStudentContext } from "@/app/context/StudentContext";
 import React from "react";
 
 const Statistics = () => {
+  
   const { students } = useStudentContext();
+
   const presentStudents = students.filter((student) =>
     student.attendance_status.some(
       (StudentStatus) => StudentStatus.status === "present"
     )
   ).length;
-  const presentStudentsList = students.map((student) =>
-    student.attendance_status.some(
-      (StudentStatus) => StudentStatus.status === "present"
-    )
-  );
-  console.log("present list: ",presentStudentsList);
 
   // lateStudents = students.filter(student => student.attendance_status.some(StudentStatus => StudentStatus.status === "late")).length
   const absentStudents = students.filter((student) =>
     student.attendance_status.some((status) => status.status === "absent")
   ).length;
-  const absentStudentsList = students.map((student) =>
-    student.attendance_status.some((status) => status.status === "absent")
-  );
-  console.log("Absent List: ",absentStudentsList)
+  
 
   return (
     <div className="flex justify-center items-center gap-3 mt-12 px-5 max-sm:flex-col">

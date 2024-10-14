@@ -2,8 +2,12 @@ import dbConnect from "@/app/lib/db";
 import Attendances from "@/app/lib/models/Attendances";
 import Students from "@/app/lib/models/Students";
 import { NextRequest, NextResponse } from "next/server";
+// import {io as ClientIO } from "socket.io-client"
+import { broadcastAttendance } from "../notifications/route";
 
 dbConnect();
+// const socket = ClientIO("http://localhost:4000");
+
 
 export async function POST(request: NextRequest) {
   const reqBody = await request.json();
@@ -83,6 +87,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Send the attendance data to the WebSocket server
+    // socket.emit("new-attendance", {
+    //   studentName: student.student_name,
+    //   status: savedAttendance.status,
+    //   timestamp: savedAttendance.timestamp,
+    // });
+
+    // After successfully saving attendance
+    broadcastAttendance({
+      studentName: student.student_name,
+      status: savedAttendance.status,
+      timestamp: savedAttendance.timestamp,
+    });
+
     return NextResponse.json(
       {
         message: "Attendance is taken successfully",
@@ -98,3 +116,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }
+
+

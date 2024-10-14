@@ -1,12 +1,16 @@
 import express from "express";
-import { createServer } from "http";
 import { Server } from "socket.io";
 
 const app = express();
-const server = createServer(app);
+
+// Create HTTP server
+const server = app.listen(4000, () => {
+  console.log(`Server running on http://localhost:4000`);
+});
+
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Your Next.js app URL
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
@@ -15,16 +19,11 @@ io.on("connection", (socket) => {
   console.log("A client connected:", socket.id);
 
   socket.on("new-attendance", (data) => {
-    // Emit to all connected clients (director dashboard)
+    console.log("Emitting attendance notification:", data); // Debug log
     io.emit("attendance-notification", data);
   });
 
   socket.on("disconnect", () => {
     console.log("Client disconnected:", socket.id);
   });
-});
-
-const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
-  console.log(`WebSocket server running on port ${PORT}`);
 });
