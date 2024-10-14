@@ -37,7 +37,13 @@ export async function POST(request: NextRequest) {
       gender,
       class_name,
       enrollment_year,
-      
+      status: "enrolled",
+      attendance_status: [
+        {
+          date: new Date(),
+          status: "absent"
+        }
+      ]
     });
 
     const savedStudent = newStudent.save();
