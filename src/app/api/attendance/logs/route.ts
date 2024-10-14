@@ -49,13 +49,13 @@ export async function POST(request: NextRequest) {
       {
         message: "Attendance is taken successfully",
         savedAttendance,
-        studentName: student.student_name, // Use correct field name
+        studentName: student.student_name, 
         attendanceId: savedAttendance._id,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error in attendance logging:", error); // Log the error for better visibility
+    console.error("Error in attendance logging:", error); 
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }

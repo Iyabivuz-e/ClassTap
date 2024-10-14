@@ -1,6 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-//Specifying the properties of the schema object
+// Specifying the properties of the schema object
+interface IAttendance {
+  date: Date;
+  status: string; // e.g., 'present', 'absent'
+}
+
 interface IStudent extends Document {
   student_id: string;
   student_name: string;
@@ -10,9 +15,11 @@ interface IStudent extends Document {
   enrollment_year: number;
   profile_image: string;
   active_status: boolean;
+  status: string;
+  attendance_status: IAttendance[]; // New attendance field
 }
 
-//creating a new student schema
+// Creating a new student schema
 const studentSchema: Schema = new Schema(
   {
     student_id: { type: String, unique: true, index: true, required: true },
@@ -28,6 +35,21 @@ const studentSchema: Schema = new Schema(
     },
     profile_image: { type: String },
     active_status: { type: Boolean, default: true },
+    status: {
+      type: String,
+      enum: ["enrolled", "suspended", "graduated"],
+      default: "enrolled",
+    },
+    attendance_status: [
+      {
+        date: { type: Date, default: Date.now },
+        status: {
+          type: String,
+          enum: ["present", "late", "absent"],
+          default: "absent",
+        },
+      },
+    ], // Attendance field
   },
   { timestamps: true }
 );

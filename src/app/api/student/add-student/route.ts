@@ -1,3 +1,4 @@
+//Add student information to the database
 import dbConnect from "@/app/lib/db";
 import { NextResponse, NextRequest } from "next/server";
 import Students from "@/app/lib/models/Students";
@@ -36,6 +37,7 @@ export async function POST(request: NextRequest) {
       gender,
       class_name,
       enrollment_year,
+      
     });
 
     const savedStudent = newStudent.save();
