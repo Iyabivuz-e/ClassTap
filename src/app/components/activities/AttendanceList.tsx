@@ -4,7 +4,7 @@ import React from "react";
 import { useStudentContext } from "@/app/context/StudentContext";
 
 const AttendanceList = () => {
-  const { students, error } = useStudentContext();
+  const { filteredStudents, error } = useStudentContext();
 
   // Function to format the time
   const formatTime = (dateString: string): string => {
@@ -36,8 +36,12 @@ const AttendanceList = () => {
             </tr>
           </thead>
           {/* Table body */}
+
+          {filteredStudents.length === 0 ? (
+        <p>No students found.</p>
+      ) : (
           <tbody>
-            {students.map((student, index) => {
+            {filteredStudents.map((student, index) => {
               const latestAttendance = student.attendance_status.reduce(
                 (latest, current) => {
                   return new Date(current.date) > new Date(latest.date)
@@ -73,8 +77,9 @@ const AttendanceList = () => {
               );
             })}
           </tbody>
+      )}
         </table>
-      </div>
+    </div>
     </div>
   );
 };

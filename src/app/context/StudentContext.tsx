@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -18,6 +18,11 @@ interface StudentContextType {
   students: Student[];
   loading: boolean;
   error: string | null;
+  filteredStudents: Student[]; // New filtered students array
+  filterStatus: string; // New filter status
+  setFilterStatus: React.Dispatch<React.SetStateAction<string>>; // Function to set filter status
+  searchQuery: string; // New search query
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>; // Function to set search query
 }
 
 const StudentContext = createContext<StudentContextType | undefined>(undefined);
@@ -28,6 +33,8 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState<string>(""); // Filter by status
+  const [searchQuery, setSearchQuery] = useState<string>(""); // Search query
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -46,8 +53,34 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
     fetchStudents();
   }, []);
 
+  // Filter and search logic
+  const filteredStudents = students.filter((student) => {
+    const isStatusMatch =
+      !filterStatus ||
+      student.attendance_status.some(
+        (status) => status.status === filterStatus
+      );
+    const isNameMatch =
+      student.student_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.card_id.includes(searchQuery) ||
+      student.student_id.includes(searchQuery);
+
+    return isStatusMatch && isNameMatch;
+  });
+
   return (
-    <StudentContext.Provider value={{ students, loading, error }}>
+    <StudentContext.Provider
+      value={{
+        students,
+        loading,
+        error,
+        filteredStudents, // Expose the filtered students
+        filterStatus, // Current filter status
+        setFilterStatus, // Function to update filter status
+        searchQuery, // Current search query
+        setSearchQuery, // Function to update search query
+      }}
+    >
       {children}
     </StudentContext.Provider>
   );
