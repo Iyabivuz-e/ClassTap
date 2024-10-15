@@ -9,12 +9,27 @@ const StudentManagement = () => {
 
   // No need to fetch students here since it's already done in the context API
 
-  const handleMarkAllPresent = () => {
-    if (allPresent) {
-      // Implement API call to mark all present
-      console.log("Marking all students as present");
+  const markAllStudentsPresent = async () => {
+    try {
+      const response = await fetch("/api/attendance/logs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ markAllPresent: true }), // Send the special flag
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.error || data.message}`);
+      }
+    } catch (error) {
+      console.error("Error marking all students present:", error);
     }
   };
+
 
   const handleOverrideAttendance = (studentId: string, newStatus: string) => {
     // Implement API call to override attendance
@@ -25,8 +40,12 @@ const StudentManagement = () => {
 
   return (
     <div className="flex flex-col p-5">
-        <h1 className="text-center text-3xl font-semibold ">Student Management System</h1>
-        <p className="text-center text-sm opacity-70 pb-12 mt-2">Manage students&apos; attendeance effortlessly</p>
+      <h1 className="text-center text-3xl font-semibold ">
+        Student Management System
+      </h1>
+      <p className="text-center text-sm opacity-70 pb-12 mt-2">
+        Manage students&apos; attendeance effortlessly
+      </p>
       <div className="flex justify-between gap-2 items-center max-sm:flex-col max-sm:gap-3 max-sm:w-full">
         <div className="flex btn btn-outline gap-2 items-center cursor-default">
           <label className="flex gap-2">
@@ -37,7 +56,17 @@ const StudentManagement = () => {
               checked={allPresent}
               onChange={(e) => {
                 setAllPresent(e.target.checked);
-                handleMarkAllPresent();
+                if (e.target.checked) {
+                  if (
+                    confirm(
+                      "Are you sure you want to mark all students as present?"
+                    )
+                  ) {
+                    markAllStudentsPresent();
+                  } else {
+                    setAllPresent(false);
+                  }
+                }
               }}
             />
             Mark All Present

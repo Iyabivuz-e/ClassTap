@@ -9,7 +9,12 @@ export async function POST(request: NextRequest) {
   const reqBody = await request.json();
 
   try {
-    const { cardId, timestamp } = reqBody;
+    const { cardId, timestamp, markAllPresent } = reqBody;
+
+    if (markAllPresent) {
+      // Mark all students present for today
+      return await markAllStudentsPresent();
+    }
 
     if (!cardId) {
       return NextResponse.json(
@@ -61,28 +66,15 @@ export async function POST(request: NextRequest) {
     // Save the attendance record
     const savedAttendance = await attendance.save();
 
-    // Checking if the student status savedis present or absent
-    if (status === "present") {
-      // Update to mark the student as present, remove any absence records for today
-      await Students.updateOne(
-        { _id: student._id, "attendance_status.date": today },
-        {
-          $set: {
-            "attendance_status.$.status": "present", // Change the status to present for today
-          },
-        }
-      );
-    } else if (status === "absent") {
-      // If the student is marked absent, ensure the absence status is updated
-      await Students.updateOne(
-        { _id: student._id, "attendance_status.date": today },
-        {
-          $set: {
-            "attendance_status.$.status": "absent", // Ensure absence status is recorded for today
-          },
-        }
-      );
-    }
+    // Update to mark the student as present
+    await Students.updateOne(
+      { _id: student._id, "attendance_status.date": today },
+      {
+        $set: {
+          "attendance_status.$.status": "present", // Change the status to present for today
+        },
+      }
+    );
 
     // Update the student's attendance status for today
     const updatedStudent = await Students.findOneAndUpdate(
@@ -121,7 +113,60 @@ export async function POST(request: NextRequest) {
   }
 }
 
+//*****MARK ALL PRESENT********************
+/// Function to mark all students present
+async function markAllStudentsPresent() {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Get today's date
 
+    // Find all students
+    const students = await Students.find();
+
+    const attendanceRecords = [];
+    const updatePromises = [];
+
+    for (const student of students) {
+      // Create a new attendance record for each student
+      const attendance = new Attendances({
+        studentId: student.student_id,
+        status: "present",
+        date: today,
+        timestamp: new Date(),
+      });
+      attendanceRecords.push(attendance);
+
+      // Update student's attendance status
+      updatePromises.push(
+        Students.updateOne(
+          { _id: student._id, "attendance_status.date": today },
+          {
+            $set: {
+              "attendance_status.$.status": "present", // Change the status to present for today
+            },
+          }
+        )
+      );
+    }
+
+    // Save all attendance records
+    await Attendances.insertMany(attendanceRecords);
+    await Promise.all(updatePromises);
+
+    return NextResponse.json(
+      { message: "All students marked present successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error marking all students present:", error);
+    return NextResponse.json(
+      { error: "Failed to mark all students present" },
+      { status: 500 }
+    );
+  }
+}
+
+// **************GET TODAY'S ATTENDANCE********************
 //Getting todays attendance
 export async function GET() {
   try {
@@ -146,6 +191,7 @@ export async function GET() {
   }
 }
 
+// **************RESET ATTENDANCE AT THE END OF THE DAY********************
 // Function to reset attendance at the end of the day (could be scheduled via cron job)
 export async function resetAttendanceForNewDay() {
   try {
@@ -189,12 +235,12 @@ export async function resetAttendanceForNewDay() {
   }
 }
 
-
+// **************ATTENDANCE HISTORY********************
 // Get attendance for a specific date (e.g., history for a given day)
 export async function getAttendanceForDate(date: string) {
   try {
     const targetDate = new Date(date);
-    targetDate.setHours(0, 0, 0, 0);  // Ensure it points to the start of the day
+    targetDate.setHours(0, 0, 0, 0); // Ensure it points to the start of the day
 
     const attendanceRecords = await Attendances.find({ date: targetDate });
     return attendanceRecords;
