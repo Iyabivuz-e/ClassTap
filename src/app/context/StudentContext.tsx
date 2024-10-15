@@ -37,7 +37,6 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
   const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>(""); // Filter by status
   const [searchQuery, setSearchQuery] = useState<string>(""); // Search query
-  const [renderComp, setRenderComp] = useState<boolean>(false); // for rendering different components
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -71,14 +70,8 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
     return isStatusMatch && isNameMatch;
   });
 
-  //Render components conditionaly 
-  const renderComponent = () => {
-    switch(renderComp){
-      case 'dashboard' : return <Dashboard/>;
-      case 'students' : return <StudentManagement/>;
-      default : return <Dashboard/>
-    }
-  }
+  //getting all students
+  
 
   return (
     <StudentContext.Provider

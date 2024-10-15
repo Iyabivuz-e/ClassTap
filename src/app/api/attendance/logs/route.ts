@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     // Entrance time logic to check if the student is late
     const entranceTimeEnd = new Date();
-    entranceTimeEnd.setHours(12, 0, 0, 0); // End of entrance period (9:00 AM)
+    entranceTimeEnd.setHours(9, 0, 0, 0); // End of entrance period (9:00 AM)
 
     let status = "present"; // Default status for on-time attendance
     if (attendanceTimestamp > entranceTimeEnd) {

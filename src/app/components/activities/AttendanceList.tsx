@@ -27,7 +27,7 @@ const AttendanceList = () => {
           {/* Table header */}
           <thead>
             <tr>
-              <th></th>
+              <th>No</th>
               <th>Student Name</th>
               <th>Student Id</th>
               <th>Card Id</th>

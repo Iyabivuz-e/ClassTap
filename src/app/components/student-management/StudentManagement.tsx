@@ -1,18 +1,49 @@
-import React from "react";
-// import AttendanceList from "./AttendanceList";
+import React, { useEffect, useState } from "react";
 import { useStudentContext } from "@/app/context/StudentContext";
+import StudentList from "./StudentList";
 
 const StudentManagement = () => {
-  const { setFilterStatus, setSearchQuery, filterStatus } = useStudentContext();
+  const { setFilterStatus, setSearchQuery, filterStatus, filteredStudents } =
+    useStudentContext(); // Get filtered students from context
+  const [allPresent, setAllPresent] = useState<boolean>(false);
+
+  // No need to fetch students here since it's already done in the context API
+
+  const handleMarkAllPresent = () => {
+    if (allPresent) {
+      // Implement API call to mark all present
+      console.log("Marking all students as present");
+    }
+  };
+
+  const handleOverrideAttendance = (studentId: string, newStatus: string) => {
+    // Implement API call to override attendance
+    console.log(
+      `Overriding attendance for ${studentId} with status ${newStatus}`
+    );
+  };
 
   return (
-    <div className="flex flex-col px-5 mt-20 pb-5 ">
-      <div className="flex justify-between gap-2 items-center max-sm:flex-col max-sm:gap-3 max-sm:w-full ">
+    <div className="flex flex-col p-5">
+        <h1 className="text-center text-3xl font-semibold ">Student Management System</h1>
+        <p className="text-center text-sm opacity-70 pb-12 mt-2">Manage students&apos; attendeance effortlessly</p>
+      <div className="flex justify-between gap-2 items-center max-sm:flex-col max-sm:gap-3 max-sm:w-full">
         <div className="flex btn btn-outline gap-2 items-center cursor-default">
-          <p>Present All</p>
-          <input type="checkbox" name="mark-all" className="cursor-pointer" />
+          <label className="flex gap-2">
+            <input
+              type="checkbox"
+              name="mark-all"
+              className="cursor-pointer"
+              checked={allPresent}
+              onChange={(e) => {
+                setAllPresent(e.target.checked);
+                handleMarkAllPresent();
+              }}
+            />
+            Mark All Present
+          </label>
         </div>
-        <div className="join max-sm:justify-between max-sm:w-full max-sm:bg-base-200 ">
+        <div className="join max-sm:justify-between max-sm:w-full max-sm:bg-base-200">
           <button
             className={`join-item btn ${
               filterStatus === "" ? "bg-gray-300" : ""
@@ -74,7 +105,13 @@ const StudentManagement = () => {
           </svg>
         </label>
       </div>
-      {/* <AttendanceList /> */}
+
+      {/* Attendance List Component */}
+      {/* Use filteredStudents instead of students to show filtered list */}
+      <StudentList
+        students={filteredStudents}
+        onOverrideAttendance={handleOverrideAttendance}
+      />
     </div>
   );
 };

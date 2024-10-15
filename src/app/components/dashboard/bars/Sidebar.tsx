@@ -5,8 +5,7 @@ import Link from "next/link";
 
 interface SidebarProps {
   setRenderComp: (comp: string) => void; // Prop to update the rendered component
-  renderComp: string
-  
+  renderComp: string;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
@@ -52,6 +51,20 @@ const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
               onClick={() => setRenderComp("students")} // Set student management component
             >
               Students
+            </div>
+          </div>
+          <div className="dropdown w-full">
+            <div
+              tabIndex={0}
+              role="button"
+              className={`btn m-1 w-full ${
+                renderComp === "attendance-reports"
+                  ? "btn m-1 w-full bg-base-content text-base-200"
+                  : ""
+              }`}
+              onClick={() => setRenderComp("attendance-reports")} // Set student management component
+            >
+              Attendance Reports
             </div>
           </div>
         </nav>
