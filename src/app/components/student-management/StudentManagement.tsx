@@ -1,15 +1,18 @@
 import React from "react";
-import AttendanceList from "./AttendanceList";
+// import AttendanceList from "./AttendanceList";
 import { useStudentContext } from "@/app/context/StudentContext";
 
-const Students = () => {
+const StudentManagement = () => {
   const { setFilterStatus, setSearchQuery, filterStatus } = useStudentContext();
 
   return (
     <div className="flex flex-col px-5 mt-20 pb-5 ">
       <div className="flex justify-between gap-2 items-center max-sm:flex-col max-sm:gap-3 max-sm:w-full ">
+        <div className="flex btn btn-outline gap-2 items-center cursor-default">
+          <p>Present All</p>
+          <input type="checkbox" name="mark-all" className="cursor-pointer" />
+        </div>
         <div className="join max-sm:justify-between max-sm:w-full max-sm:bg-base-200 ">
-          
           <button
             className={`join-item btn ${
               filterStatus === "" ? "bg-gray-300" : ""
@@ -71,9 +74,9 @@ const Students = () => {
           </svg>
         </label>
       </div>
-      <AttendanceList />
+      {/* <AttendanceList /> */}
     </div>
   );
 };
 
-export default Students;
+export default StudentManagement;

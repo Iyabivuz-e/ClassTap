@@ -1,9 +1,15 @@
-import Image from 'next/image';
+// Sidebar.tsx
+import Image from "next/image";
 import logo from "../../../../../public/images/logowm.png";
-import Link from 'next/link';
+import Link from "next/link";
 
+interface SidebarProps {
+  setRenderComp: (comp: string) => void; // Prop to update the rendered component
+  renderComp: string
+  
+}
 
-const Sidebar = () => {
+const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
   return (
     <div>
       <div className="p-5">
@@ -16,44 +22,42 @@ const Sidebar = () => {
             />
           </Link>
         </div>
-        <h1 className='text-center font-semibold uppercase mt-2 text-sm'>World Mission High School</h1>
+        <h1 className="text-center font-semibold uppercase mt-2 text-sm">
+          World Mission High School
+        </h1>
         <nav className="mt-10">
           <div className="dropdown w-full">
-            <div tabIndex={0} role="button" className="btn m-1 w-full">
+            <div
+              tabIndex={0}
+              role="button"
+              className={`btn m-1 w-full ${
+                renderComp === "dashboard"
+                  ? "btn m-1 w-full bg-base-content text-base-200"
+                  : ""
+              }`}
+              onClick={() => setRenderComp("dashboard")} // Set dashboard component
+            >
               Dashboard
             </div>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-            >
-              <li>
-                <a>Today&#39;s attenddance</a>
-              </li>
-              <li>
-                <a>Item 2</a>
-              </li>
-            </ul>
           </div>
           <div className="dropdown w-full">
-            <div tabIndex={0} role="button" className="btn m-1 w-full">
+            <div
+              tabIndex={0}
+              role="button"
+              className={`btn m-1 w-full ${
+                renderComp === "students"
+                  ? "btn m-1 w-full bg-base-content text-base-200"
+                  : ""
+              }`}
+              onClick={() => setRenderComp("students")} // Set student management component
+            >
               Students
             </div>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-            >
-              <li>
-                <a>All Students</a>
-              </li>
-              <li>
-                <a>Item 2</a>
-              </li>
-            </ul>
           </div>
         </nav>
       </div>
     </div>
   );
-}
+};
 
-export default Sidebar
+export default Sidebar;
