@@ -13,16 +13,17 @@ const Statistics = () => {
     )
   ).length;
 
-  // lateStudents = students.filter(student => student.attendance_status.some(StudentStatus => StudentStatus.status === "late")).length
+  const lateStudents = students.filter(student => student.attendance_status.some(StudentStatus => StudentStatus.status === "late")).length
   const absentStudents = students.filter((student) =>
-    student.attendance_status.some((status) => status.status === "absent")
+    student.attendance_status.every((status) => status.status === "absent")
   ).length;
+
   
 
   return (
     <div className="flex justify-center items-center gap-3 mt-12 px-5 max-sm:flex-col">
       <div className="bg-base-100 w-full border-1 border-opacity-5 shadow-md">
-        <h1 className="p-3 bg-base-200 bg-green-500 text-base-100 text-center text-xl font-semibold">
+        <h1 className="p-3 bg-green-500 text-base-100 text-center text-xl font-semibold">
           Total Present
         </h1>
         <div className="p-4 text-center">
@@ -31,16 +32,16 @@ const Statistics = () => {
       </div>
       {/* Late */}
       <div className="bg-base-100 w-full border-1 border-opacity-15 shadow-md">
-        <h1 className="p-3 bg-base-200 bg-yellow-500 text-base-100 text-center text-xl font-semibold">
+        <h1 className="p-3 bg-yellow-500 text-base-100 text-center text-xl font-semibold">
           Total Late
         </h1>
         <div className="p-4 text-center">
-          <h1 className="text-2xl">0</h1>
+          <h1 className="text-2xl">{lateStudents}</h1>
         </div>
       </div>
       {/* Absent */}
       <div className="bg-base-100 w-full border-1 border-opacity-15 shadow-md">
-        <h1 className="p-3 bg-base-200  bg-red-500 text-base-100 text-center text-xl font-semibold">
+        <h1 className="p-3  bg-red-500 text-base-100 text-center text-xl font-semibold">
           Total Absent
         </h1>
         <div className="p-4 text-center">

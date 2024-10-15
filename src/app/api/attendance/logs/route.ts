@@ -2,12 +2,8 @@ import dbConnect from "@/app/lib/db";
 import Attendances from "@/app/lib/models/Attendances";
 import Students from "@/app/lib/models/Students";
 import { NextRequest, NextResponse } from "next/server";
-// import {io as ClientIO } from "socket.io-client"
-import { broadcastAttendance } from "../notifications/route";
 
 dbConnect();
-// const socket = ClientIO("http://localhost:4000");
-
 
 export async function POST(request: NextRequest) {
   const reqBody = await request.json();
@@ -29,55 +25,77 @@ export async function POST(request: NextRequest) {
     }
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0); // Get today's date, resetting to midnight
 
+    // Check if attendance has already been logged today
     const existingAttendance = await Attendances.findOne({
       studentId: student.student_id,
-      timestamp: { $gte: today },
+      date: today, // Use today's date to differentiate attendance by day
     });
 
     if (existingAttendance) {
-      return NextResponse.json({ message: "Attendance already taken" });
+      return NextResponse.json({
+        message: "Attendance already taken for today",
+      });
     }
 
-    const attendanceTimestamp = timestamp ? new Date(timestamp) : new Date(); //Attendance timestamp
+    const attendanceTimestamp = timestamp ? new Date(timestamp) : new Date();
 
+    // Entrance time logic to check if the student is late
+    const entranceTimeEnd = new Date();
+    entranceTimeEnd.setHours(12, 0, 0, 0); // End of entrance period (9:00 AM)
+
+    let status = "present"; // Default status for on-time attendance
+    if (attendanceTimestamp > entranceTimeEnd) {
+      status = "late"; // Mark as late if the timestamp exceeds 9:00 AM
+    }
+
+    // Create a new attendance record with the current date
     const attendance = new Attendances({
       studentId: student.student_id,
-      timestamp: timestamp ? new Date(timestamp) : new Date(),
-      status: "present",
+      timestamp: attendanceTimestamp,
+      status,
+      date: today, // Store today's date to track attendance by day
     });
 
+    // Save the attendance record
     const savedAttendance = await attendance.save();
 
-    // //updating a student's attendance status to "present" for today
-    // const updatedStudent = await Students.findOneAndUpdate(
-    //   student._id,
-    //   {
-    //     $set: {
-    //       "attendance_status.$[elem].status": "present",
-    //     },
-    //   },
-    //   {
-    //     arrayFilters: [{ "elem.date": { $gte: today } }],
-    //     new: true,
-    //   }
-    // );
+    // Checking if the student status savedis present or absent
+    if (status === "present") {
+      // Update to mark the student as present, remove any absence records for today
+      await Students.updateOne(
+        { _id: student._id, "attendance_status.date": today },
+        {
+          $set: {
+            "attendance_status.$.status": "present", // Change the status to present for today
+          },
+        }
+      );
+    } else if (status === "absent") {
+      // If the student is marked absent, ensure the absence status is updated
+      await Students.updateOne(
+        { _id: student._id, "attendance_status.date": today },
+        {
+          $set: {
+            "attendance_status.$.status": "absent", // Ensure absence status is recorded for today
+          },
+        }
+      );
+    }
 
-    // Update or push attendance status with the exact timestamp
+    // Update the student's attendance status for today
     const updatedStudent = await Students.findOneAndUpdate(
       { _id: student._id },
       {
         $push: {
           attendance_status: {
-            date: attendanceTimestamp, // Use the attendance timestamp
-            status: "present",
+            date: attendanceTimestamp, // Track the date of attendance
+            status,
           },
         },
       },
-      {
-        new: true,
-      }
+      { new: true }
     );
 
     if (!updatedStudent) {
@@ -87,23 +105,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send the attendance data to the WebSocket server
-    // socket.emit("new-attendance", {
-    //   studentName: student.student_name,
-    //   status: savedAttendance.status,
-    //   timestamp: savedAttendance.timestamp,
-    // });
-
-    // After successfully saving attendance
-    broadcastAttendance({
-      studentName: student.student_name,
-      status: savedAttendance.status,
-      timestamp: savedAttendance.timestamp,
-    });
-
     return NextResponse.json(
       {
-        message: "Attendance is taken successfully",
+        message: "Attendance successfully recorded",
         savedAttendance,
         studentName: student.student_name,
         attendanceId: savedAttendance._id,
@@ -118,3 +122,83 @@ export async function POST(request: NextRequest) {
 }
 
 
+//Getting todays attendance
+export async function GET() {
+  try {
+    // Get today's date and reset the time to midnight
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Find all attendances for today
+    const attendances = await Attendances.find({ date: today });
+
+    if (!attendances.length) {
+      return NextResponse.json({ message: "No attendance records for today" });
+    }
+
+    return NextResponse.json(attendances, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching today's attendance:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch today's attendance" },
+      { status: 500 }
+    );
+  }
+}
+
+// Function to reset attendance at the end of the day (could be scheduled via cron job)
+export async function resetAttendanceForNewDay() {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Get today's date
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1); // Get tomorrow's date for comparison
+
+    // Find all students who haven't recorded attendance for today
+    const studentsWithoutAttendance = await Students.find({
+      "attendance_status.date": { $lt: today }, // Filter for older attendance records
+    });
+
+    // Mark those students as absent for today
+    for (const student of studentsWithoutAttendance) {
+      await Attendances.create({
+        studentId: student.student_id,
+        status: "absent",
+        date: today, // Mark as absent for today
+        timestamp: new Date(),
+      });
+
+      // Update student's status
+      await Students.updateOne(
+        { _id: student._id },
+        {
+          $push: {
+            attendance_status: {
+              date: today,
+              status: "absent",
+            },
+          },
+        }
+      );
+    }
+
+    console.log("Attendance reset completed successfully.");
+  } catch (error) {
+    console.error("Error resetting attendance for new day:", error);
+  }
+}
+
+
+// Get attendance for a specific date (e.g., history for a given day)
+export async function getAttendanceForDate(date: string) {
+  try {
+    const targetDate = new Date(date);
+    targetDate.setHours(0, 0, 0, 0);  // Ensure it points to the start of the day
+
+    const attendanceRecords = await Attendances.find({ date: targetDate });
+    return attendanceRecords;
+  } catch (error) {
+    console.error("Error fetching attendance for the specified date:", error);
+  }
+}

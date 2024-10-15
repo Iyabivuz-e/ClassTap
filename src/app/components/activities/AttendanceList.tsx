@@ -56,6 +56,8 @@ const AttendanceList = () => {
                     className={
                       latestAttendance?.status === "present"
                         ? "text-green-500"
+                        : latestAttendance?.status === "late"
+                        ? "text-yellow-500"
                         : "text-red-500"
                     }
                   >
@@ -63,7 +65,8 @@ const AttendanceList = () => {
                   </td>
                   <td>
                     {latestAttendance?.status === "present"
-                      ? formatTime(latestAttendance.date)
+                      ? formatTime(latestAttendance.date):
+                      latestAttendance?.status === "late" ? formatTime(latestAttendance.date)
                       : "N/A"}
                   </td>
                 </tr>
