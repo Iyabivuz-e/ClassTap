@@ -31,7 +31,7 @@ const Students = () => {
           <button
             className={`join-item btn text-yellow-500 ${
               filterStatus === "late"
-                ? "bg-yellow-500 text-white"
+                ? "bg-yellow-500 text-green-500"
                 : "hover:bg-yellow-500 hover:text-base-100"
             }`}
             onClick={() => setFilterStatus("late")}
