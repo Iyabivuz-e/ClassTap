@@ -2,32 +2,35 @@
 import { useEffect, useState } from "react";
 import Home from "./components/home/Home";
 import Theme from "./helpers/Themes";
-import Head from "next/head";
 import Loader from "./helpers/Loader";
+import { usePathname } from "next/navigation";
 
 export default function HomePage() {
-
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   // Simulate loading delay
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(false); 
+      setLoading(false);
     });
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, []);
 
-  const pageTitle = "Home - Attendance.";
+  //Changing the head text
+  const pathname = usePathname();
+  useEffect(() => {
+    // Extract the part of the pathname you want to include in the title
+    if (pathname.includes("/")) {
+      document.title = "Home - ClassTap";
+    } else {
+      document.title = "ClassTap"; // Default title
+    }
+  }, [pathname]); // This effect will run whenever the pathname changes
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content="Home - Attendance." />
-      </Head>
-
-      {loading ? ( 
+      {loading ? (
         <Loader />
       ) : (
         <div className="bg-base-100 min-h-screen flex flex-col items-center justify-center">
