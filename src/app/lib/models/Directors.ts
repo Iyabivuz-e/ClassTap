@@ -16,7 +16,7 @@ const directorSchema: Schema = new Schema(
     email: { type: "string", required: true, unique: true },
     password: { type: "string", required: true },
     schoolName: { type: "string", required: true },
-    role: { type: "string", default: "Director" },
+    role: { type: "string", default: "Director of Studies" },
   },
   { timestamps: true }
 );

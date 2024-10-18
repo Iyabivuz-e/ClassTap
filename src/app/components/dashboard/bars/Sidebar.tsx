@@ -62,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
                   ? "btn m-1 w-full bg-base-content text-base-200"
                   : ""
               }`}
-              onClick={() => setRenderComp("attendance-reports")} // Set student management component
+              onClick={() => setRenderComp("attendance-reports")} // Set Attendance reports component
             >
               Attendance Reports
             </div>
@@ -72,11 +72,11 @@ const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
               tabIndex={0}
               role="button"
               className={`btn m-1 w-full ${
-                renderComp === "Profile"
+                renderComp === "profile"
                   ? "btn m-1 w-full bg-base-content text-base-200"
                   : ""
               }`}
-              onClick={() => setRenderComp("profile")} // Set student management component
+              onClick={() => setRenderComp("profile")} // Set profile component
             >
               Profile
             </div>

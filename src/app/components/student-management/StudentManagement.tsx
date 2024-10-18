@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { useStudentContext } from "@/app/context/StudentContext";
 import StudentList from "./StudentList";
+import Loader from "@/app/helpers/Loader";
 
 const StudentManagement = () => {
-  const { setFilterStatus, setSearchQuery, filterStatus, filteredStudents } =
-    useStudentContext(); // Get filtered students from context
+  const {
+    setFilterStatus,
+    setSearchQuery,
+    filterStatus,
+    filteredStudents,
+    loading,
+  } = useStudentContext(); // Get filtered students from context
   const [allPresent, setAllPresent] = useState<boolean>(false);
 
   // No need to fetch students here since it's already done in the context API
@@ -37,6 +43,9 @@ const StudentManagement = () => {
       `Overriding attendance for ${studentId} with status ${newStatus}`
     );
   };
+
+  if (loading === null) return <Loader />;
+
 
   return (
     <div className="flex flex-col p-5">

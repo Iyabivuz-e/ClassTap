@@ -7,6 +7,7 @@ import Sidebar from "./bars/Sidebar";
 import Head from "next/head";
 import Activity from "../activities/Activity";
 import StudentManagement from "../student-management/StudentManagement";
+import Profile from "../profile/Profile";
 
 const Dashboard = () => {
   const pageTitle = "Dashboard - Attendance.";
@@ -35,6 +36,8 @@ const Dashboard = () => {
         return <Activity />;
       case "students":
         return <StudentManagement />;
+      case "profile":
+        return <Profile />;
       default:
         return <Activity />;
     }
