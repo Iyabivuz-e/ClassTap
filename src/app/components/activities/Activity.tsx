@@ -43,7 +43,7 @@ const Activity: React.FC = () => {
   return (
     <div className="w-full">
       <div className="text-center mt-8">
-        <h1 className="text-3xl font-semibold">
+        <h1 className="text-3xl font-semibold px-1 max-sm:text-2xl">
           {currentDate} Active attendances
         </h1>
       </div>

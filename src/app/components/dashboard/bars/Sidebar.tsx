@@ -25,13 +25,13 @@ const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
           World Mission High School
         </h1>
         <nav className="mt-10">
-          <div className="dropdown w-full">
+          <div className="dropdown w-full ">
             <div
               tabIndex={0}
               role="button"
               className={`btn m-1 w-full ${
                 renderComp === "dashboard"
-                  ? "btn m-1 w-full bg-base-content text-base-200"
+                  ? "btn m-1 w-full bg-base-content text-base-200 hover:text-inherit"
                   : ""
               }`}
               onClick={() => setRenderComp("dashboard")} // Set dashboard component
@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
               role="button"
               className={`btn m-1 w-full ${
                 renderComp === "students"
-                  ? "btn m-1 w-full bg-base-content text-base-200"
+                  ? "btn m-1 w-full bg-base-content text-base-200 hover:text-inherit"
                   : ""
               }`}
               onClick={() => setRenderComp("students")} // Set student management component
@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
               role="button"
               className={`btn m-1 w-full ${
                 renderComp === "attendance-reports"
-                  ? "btn m-1 w-full bg-base-content text-base-200"
+                  ? "btn m-1 w-full bg-base-content text-base-200 hover:text-inherit"
                   : ""
               }`}
               onClick={() => setRenderComp("attendance-reports")} // Set Attendance reports component
@@ -73,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
               role="button"
               className={`btn m-1 w-full ${
                 renderComp === "profile"
-                  ? "btn m-1 w-full bg-base-content text-base-200"
+                  ? "btn m-1 w-full bg-base-content text-base-200 hover:text-inherit"
                   : ""
               }`}
               onClick={() => setRenderComp("profile")} // Set profile component

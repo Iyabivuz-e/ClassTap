@@ -70,7 +70,7 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
       </div>
       <div className="navbar-center">
         <a className="btn btn-ghost text-xl max-sm:hidden">
-          Director of Studies
+          Director of Studies Dashboard
         </a>
       </div>
       <div className="navbar-end">

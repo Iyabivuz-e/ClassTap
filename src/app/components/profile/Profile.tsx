@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { FaUser, FaEdit, FaKey } from "react-icons/fa"; 
+import { FaEdit, FaKey } from "react-icons/fa"; 
 import profile from "../../../../public/images/imggggh.jpg";
 import { useStudentContext } from "@/app/context/StudentContext";
 import Loader from "@/app/helpers/Loader";
@@ -23,7 +23,7 @@ const Profile = () => {
     <>
       <div className="flex flex-col justify-center gap-4 items-center mt-6 w-full px-3">
         {/* intro */}
-        <div className="flex flex-col gap-1 pb-2">
+        <div className="flex flex-col gap-2 pb-2">
           <h1 className="text-3xl font-semibold text-center">
             Hi, {director?.fullname}, Welcome to your profile
           </h1>
@@ -32,11 +32,7 @@ const Profile = () => {
           </span>
         </div>
         {/* Edit */}
-        <div className="flex items-center justify-between w-full px-10">
-          <button className="btn flex items-center gap-2">
-            <FaUser />
-            Profile
-          </button>
+        <div className="flex items-center justify-between w-full gap-1 max-sm:gap-0 px-10">
           <button className="btn flex items-center gap-2">
             <FaEdit />
             Edit Profile
@@ -47,7 +43,7 @@ const Profile = () => {
           </button>
         </div>
         {/* profile photo and name */}
-        <div className="flex items-center gap-5 border-2 border-base-200 border-opacity-30 shadow-md w-full p-4">
+        <div className="flex items-center gap-5 border-2 border-base-300 border-opacity-30 shadow-md w-full p-4">
           <Image
             src={profile}
             alt="profile-photo"
@@ -57,7 +53,7 @@ const Profile = () => {
           />
           <div className="flex flex-col gap-1">
             <p className="font-semibold text-xl">{director?.fullname}</p>
-            <p className=" text-sm">Position: Director of Studies</p>
+            <p className=" text-sm opacity-70">Position: Director of Studies</p>
           </div>
         </div>
         {/* personal information */}
