@@ -4,21 +4,24 @@ import { useStudentContext } from "@/app/context/StudentContext";
 import React from "react";
 
 const Statistics = () => {
-  
   const { students } = useStudentContext();
-
+  
   const presentStudents = students.filter((student) =>
     student.attendance_status.some(
       (StudentStatus) => StudentStatus.status === "present"
     )
   ).length;
 
-  const lateStudents = students.filter(student => student.attendance_status.some(StudentStatus => StudentStatus.status === "late")).length
+  const lateStudents = students.filter((student) =>
+    student.attendance_status.some(
+      (StudentStatus) => StudentStatus.status === "late"
+    )
+  ).length;
+
   const absentStudents = students.filter((student) =>
     student.attendance_status.every((status) => status.status === "absent")
   ).length;
 
-  
 
   return (
     <div className="flex justify-center items-center gap-3 mt-12 px-5 max-sm:flex-col">

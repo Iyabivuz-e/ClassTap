@@ -67,6 +67,20 @@ const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
               Attendance Reports
             </div>
           </div>
+          <div className="dropdown w-full">
+            <div
+              tabIndex={0}
+              role="button"
+              className={`btn m-1 w-full ${
+                renderComp === "Profile"
+                  ? "btn m-1 w-full bg-base-content text-base-200"
+                  : ""
+              }`}
+              onClick={() => setRenderComp("profile")} // Set student management component
+            >
+              Profile
+            </div>
+          </div>
         </nav>
       </div>
     </div>

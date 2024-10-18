@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useStudentContext } from "@/app/context/StudentContext";
 import StudentList from "./StudentList";
 
@@ -59,7 +59,7 @@ const StudentManagement = () => {
                 if (e.target.checked) {
                   if (
                     confirm(
-                      "Are you sure you want to mark all students as present?"
+                      "Are you sure you want to mark all students?"
                     )
                   ) {
                     markAllStudentsPresent();

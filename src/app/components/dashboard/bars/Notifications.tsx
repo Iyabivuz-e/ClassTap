@@ -32,7 +32,7 @@ const Notifications = ({ notifs }: { notifs: boolean }) => {
       eventSource.close();
     };
   }, []);
-  console.log("Student entered: ", notifications);
+  // console.log("Student entered: ", notifications);
 
   
   return (
