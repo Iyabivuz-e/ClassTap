@@ -214,7 +214,7 @@
           setLoading(false);
         }
       };
-      fetchDirectors()
+      fetchDirectors();
       fetchStudentsAndAttendance();
     }, []); // Only run once on component mount
 
@@ -268,7 +268,28 @@
       return isStatusMatch && isNameMatch;
     });
 
-    //Getting the director of studies' information for thier profile.
+    // ***************GETTING STUDENT'S ATTENDANCE BY THEIR CLASSES*********************
+    const fetchAttendanceByClassAndCourse = async (
+      selectedClass: string,
+      selectedCourse: string
+    ) => {
+      try {
+        const response = await fetch("/api/classes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ selectedClass, selectedCourse }),
+        });
+        const data = await response.json();
+        if (data.success) {
+          // Use the attendance data
+          console.log(data.attendance);
+        } else {
+          console.error(data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching attendance:", error);
+      }
+    };
 
     return (
       <StudentContext.Provider

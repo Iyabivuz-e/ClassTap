@@ -58,6 +58,20 @@ const Sidebar: React.FC<SidebarProps> = ({ setRenderComp, renderComp }) => {
               tabIndex={0}
               role="button"
               className={`btn m-1 w-full ${
+                renderComp === "classes"
+                  ? "btn m-1 w-full bg-base-content text-base-200 hover:text-inherit"
+                  : ""
+              }`}
+              onClick={() => setRenderComp("classes")} // Set student management component
+            >
+              Classes
+            </div>
+          </div>
+          <div className="dropdown w-full">
+            <div
+              tabIndex={0}
+              role="button"
+              className={`btn m-1 w-full ${
                 renderComp === "attendance-reports"
                   ? "btn m-1 w-full bg-base-content text-base-200 hover:text-inherit"
                   : ""

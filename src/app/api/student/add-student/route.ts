@@ -1,4 +1,3 @@
-//Add student information to the database
 import dbConnect from "@/app/lib/db";
 import { NextResponse, NextRequest } from "next/server";
 import Students from "@/app/lib/models/Students";
@@ -15,56 +14,57 @@ export async function POST(request: NextRequest) {
       card_id,
       gender,
       class_name,
+      course, // Ensure 'course' is included here
+      profile_image, // Ensure 'course' is included here
       enrollment_year,
     } = reqBody;
 
+    // Check if all required fields are provided, including 'course'
     if (
       !student_id ||
       !student_name ||
       !card_id ||
       !gender ||
       !class_name ||
+      !course || // Make sure to check for 'course'
+      !profile_image || 
       !enrollment_year
     ) {
-      return NextResponse.json({ message: "Kindly input all required fields" });
+      return NextResponse.json(
+        { message: "Kindly input all required fields" },
+        { status: 400 }
+      );
     }
 
-    //Adding a student
-    const newStudent = await new Students({
+    // Creating a new student
+    const newStudent = new Students({
       student_id,
       student_name,
       card_id,
       gender,
       class_name,
+      course,
+      profile_image,
       enrollment_year,
       status: "enrolled",
       attendance_status: [
         {
           date: new Date(),
-          status: "absent"
-        }
-      ]
+          status: "absent",
+        },
+      ],
     });
 
-    const savedStudent = newStudent.save();
+    const savedStudent = await newStudent.save(); // Await the save operation
 
-    if (!savedStudent) {
-      return NextResponse.json(
-        {
-          message: "Failed to add a student in the database",
-        },
-        { status: 500 }
-      );
-    }
     return NextResponse.json(
-      { response: savedStudent, message: "Student is added successfully" },
+      { response: savedStudent, message: "Student added successfully" },
       { status: 200 }
     );
   } catch (error) {
+    console.error("Error adding student:", error);
     return NextResponse.json(
-      {
-        message: "Internal server error",
-      },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }

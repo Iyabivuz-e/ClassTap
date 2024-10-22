@@ -1,7 +1,7 @@
 // Dashboard.tsx
 "use client";
 
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./bars/Navbar";
 import Sidebar from "./bars/Sidebar";
 import Head from "next/head";
@@ -9,20 +9,17 @@ import Activity from "../activities/Activity";
 import StudentManagement from "../student-management/StudentManagement";
 import Profile from "../profile/Profile";
 import { usePathname } from "next/navigation";
+import Classes from "../classes/Classes";
 
 const Dashboard = () => {
-
   const pathname = usePathname();
   useEffect(() => {
-    // Extract the part of the pathname you want to include in the title
     if (pathname.includes("dashboard")) {
       document.title = "Dashboard - ClassTap";
     } else {
-      document.title = "ClassTap"; // Default title
+      document.title = "ClassTap";
     }
-  }, [pathname]); // This effect will run whenever the pathname changes
-
-
+  }, [pathname]);
 
   const pageTitle = "Dashboard - Attendance.";
 
@@ -52,6 +49,8 @@ const Dashboard = () => {
         return <StudentManagement />;
       case "profile":
         return <Profile />;
+      case "classes":
+        return <Classes />;
       default:
         return <Activity />;
     }

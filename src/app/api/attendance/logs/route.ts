@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
 
     const status = attendanceTimestamp > entranceTimeEnd ? "late" : "present";
 
+
     // Check if the student already has attendance logged today
     let attendance = await Attendances.findOne({
       studentId: student._id,
