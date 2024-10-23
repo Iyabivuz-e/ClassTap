@@ -15,14 +15,22 @@ const AttendanceList = () => {
 
   // Function to format the time
   const formatTime = (dateString: string): string => {
-    const date = new Date(dateString);
+    const date = new Date(dateString); // Remove "Z" from the date string handling
+    if (isNaN(date.getTime())) {
+      return "Invalid Date"; // Handle invalid date
+    }
     const options: Intl.DateTimeFormatOptions = {
-      hour: "numeric",
-      minute: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
       hour12: true,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
-    return date.toLocaleString("en-US", options);
+    return date.toLocaleTimeString("en-US", options);
   };
+
+
+
+
 
   if (error) return <div>Error: {error}</div>;
 
@@ -56,6 +64,9 @@ const AttendanceList = () => {
                   },
                   { date: "1970-01-01T00:00:00Z", status: "absent" }
                 );
+                // console.log("Attendance date:", latestAttendance.date);
+                const formattedTime = formatTime(latestAttendance.date);
+                console.log("Formatted time:", formattedTime);
 
                 return (
                   <tr key={index} className="bg-base-200">

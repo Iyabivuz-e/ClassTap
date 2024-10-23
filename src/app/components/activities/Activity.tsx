@@ -11,15 +11,21 @@ import { Attendance } from "@/app/lib/models/Attendances"; // Adjust import base
 const Activity: React.FC = () => {
   const { loading } = useStudentContext();
   const [currentDate, setCurrentDate] = useState<string>("");
+  const [currentTime, setCurrentTime] = useState<string>("");
   const [attendanceData, setAttendanceData] = useState<Attendance[] | null>(
     null
   );
 
   useEffect(() => {
     // Get the current date and format it
-    const today = new Date();
-    const formattedDate = format(today, "EEEE, MMM d, yyyy"); // e.g., "Friday, Oct 11, 2024"
+    let today = new Date();
+    const formattedDate = format(today, "EEEE, MMM d, yyyy"); 
     setCurrentDate(formattedDate);
+    setInterval(() => {
+      today = new Date();
+      const formattedTime = format(today, "hh:mm:ss a");
+      setCurrentTime(formattedTime);
+    }, 1000);
 
     // Fetch the current day's attendance data from the backend
     const fetchAttendance = async () => {
@@ -44,7 +50,7 @@ const Activity: React.FC = () => {
     <div className="w-full">
       <div className="text-center mt-8">
         <h1 className="text-3xl font-semibold px-1 max-sm:text-2xl">
-          {currentDate} Active attendances
+          {currentDate} Active attendances : <small className="font-normal">{currentTime}</small>
         </h1>
       </div>
 

@@ -31,6 +31,7 @@
 
   interface StudentContextType {
     students: Student[];
+    filterClassAttendance: Student[];
     directors: Directors[];
     loading: boolean;
     error: string | null;
@@ -40,6 +41,10 @@
     searchQuery: string; // New search query
     setSearchQuery: React.Dispatch<React.SetStateAction<string>>; // Function to set search query
     fetchTodaysAttendance: () => Promise<void>; // Function to fetch today's attendance
+    fetchAttendanceByClassAndCourse: (
+      selectedClass: string,
+      selectedCourse: string
+    ) => Promise<void>;
   }
 
   const StudentContext = createContext<StudentContextType | undefined>(undefined);
@@ -51,6 +56,8 @@
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [filterStatus, setFilterStatus] = useState<string>(""); // Filter by status
+    const [filterClassAttendance, setFilterClassAttendance] =
+      useState<Student[]>([]); // Filter by status
     const [searchQuery, setSearchQuery] = useState<string>(""); // Search query
     const [directors, setDirectors] = useState<Directors[]>([]); // State for today's attendance
 
@@ -282,8 +289,10 @@
         const data = await response.json();
         if (data.success) {
           // Use the attendance data
+          setFilterClassAttendance(data.attendance);
           console.log(data.attendance);
         } else {
+          data.attendance(data.message);
           console.error(data.message);
         }
       } catch (error) {
@@ -304,6 +313,8 @@
           searchQuery,
           setSearchQuery,
           fetchTodaysAttendance,
+          fetchAttendanceByClassAndCourse,
+          filterClassAttendance,
         }}
       >
         {children}
