@@ -25,6 +25,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Enforce specific domain (@dio.com)
+    const requiredDomain = "@dio.com";
+    if (!email.endsWith(requiredDomain)) {
+      return NextResponse.json(
+        { message: `Email must be from the ${requiredDomain} domain.` },
+        { status: 400 }
+      );
+    }
+
     // Checking if a director exists
     const existingDirector = await Directors.findOne({ email });
     if (existingDirector) {
@@ -72,3 +81,15 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
+
+
+
+ // Enforce domain validation for email
+    // const allowedDomain = "@dio.com";
+    // if (!email.endsWith(allowedDomain)) {
+    //   setError(`Email must end with ${allowedDomain}`);
+    //   setLoading(false);
+    //   return;
+    // }
