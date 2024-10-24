@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 
-const Login = ({ toggleForm }) => {
+interface Prop {
+  toggleForm: () => void;
+}
+
+const Login = ({ toggleForm }: Prop) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
