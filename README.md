@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+**Director of Study (DoS) Dashboard - Attendance Management System**
 
-## Getting Started
+###**Project Overview**
 
-First, run the development server:
+The Director of Study (DoS) Dashboard is a comprehensive platform designed to manage student attendance efficiently. It allows the Director of Studies to view, track, and manage attendance across multiple classes and courses in real-time. The dashboard integrates RFID/Smart Card technology for seamless attendance capture and provides features such as manual entries, attendance reports, and alerts for absent students.
 
-```bash
+###**Key Features**
+
+Class and Course Selection: Easily select classes and courses from dropdowns and view real-time attendance logs.
+Real-time Notifications: Get alerts when a student's attendance needs attention.
+Attendance Logs: View detailed logs of student attendance.
+Student Management: Search and filter students based on attendance status and other parameters.
+Attendance Reports: Generate detailed reports of attendance for classes or students over time.
+Real-Time Attendance Capture: Use RFID or Smart Card technology to capture student attendance in real time.
+
+###**Technologies Used**
+
+**Frontend**: Next.js 14+ with TypeScript and Tailwind CSS, DaisyUI for responsive design.
+**Backend**: Node.js using Next.js for API routes and MongoDB with Mongoose for database management.
+**Real-time Features**: Firebase for real-time attendance updates and notifications.
+**Attendance Capturing**: RFID integration for logging attendance using smart cards.
+
+
+###**Table of Contents**
+
+1. Setup and Installation
+2. Database Configuration
+3. API Endpoints
+4. Testing the API
+   
+###**Usage**
+
+**Setup and Installation**
+**Prerequisites**
+Before starting, ensure you have the following installed on your machine:
+
+1. Node.js (version 16 or higher)
+2. MongoDB (local or cloud instance)
+3. Git for version control
+
+###**Installation Steps**
+
+**Clone the Repository:**
+
+git clone https://github.com/Iyabivuz-e/ClassTap.git
+cd dos-attendance-dashboard
+
+**Install Dependencies:** Navigate to the project root and install the dependencies.
+
+npm install
+Set Up Environment Variables: Create a .env.local file in the root directory and add the following:
+
+
+MONGODB_URI=mongodb+srv://<your-db-user>:<password>@cluster0.mongodb.net/dos-attendance
+NEXT_PUBLIC_FIREBASE_API_KEY=<your-firebase-api-key>
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=<your-firebase-sender-id>
+Run the Project: To start the development server, run:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Access the Application: The application will be available at http://localhost:3000.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Database Configuration**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**MongoDB Setup**
+You will need MongoDB to store student data, attendance logs, and other related records. If you do not have MongoDB installed, you can use a cloud database service like MongoDB Atlas.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Create a MongoDB Cluster**: Sign up for MongoDB Atlas or run MongoDB locally on your machine.
 
-## Learn More
+**Create Collections**: Use the following structure in MongoDB:
 
-To learn more about Next.js, take a look at the following resources:
+. students: Stores student details (name, class, card ID, etc.).
+. attendance: Logs student attendance status (present, absent, late).
+. courses: Stores the courses available for each class.
+. Ensure that your database URI is correctly configured in the .env.local file.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+###**API Endpoints**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Base URL: /api
 
-## Deploy on Vercel
+1. **Fetch Attendance by Class and Course**
+   
+Endpoint: /api/attendance/class
+Method: GET
+Description: Fetches attendance logs based on the selected class and course.
+Request Parameters:
+class: The selected class (e.g., Level 3).
+course: The selected course (e.g., Software).
+Response: Returns a list of students and their attendance status.
+Example Request:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+GET /api/attendance/class
+2. Capture Student Attendance
+Endpoint: /api/attendance/log
+Method: POST
+Description: Captures or updates student attendance for the current day.
+Request Body:
+json
+{
+  "card_id": "CARD003",
+}
+Response: Attendance status updated successfully.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+###**Viewing Attendance:**
+
+Navigate to the Class Attendance section.
+Select a class (e.g., Level 3).
+Select a course (e.g., Software).
+The student list and attendance status will be displayed accordingly.
+
+###**Capturing Attendance:**
+
+. Students tap their RFID card to log attendance.
+. The system captures the attendance status in real-time.
+. The Director of Study can manually override or add attendance if needed.
+
+###**Conclusion**
+
+The Director of Study (DoS) Dashboard provides a streamlined interface for managing student attendance and viewing attendance logs by class and course. With real-time notifications, report generation, and easy-to-use attendance management features, it simplifies the overall process for school administrators.
+
+
+
+
+
+
