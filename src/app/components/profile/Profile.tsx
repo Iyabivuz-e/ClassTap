@@ -35,7 +35,7 @@ const Profile = () => {
         <div className="flex items-center justify-between w-full gap-1 max-sm:gap-0 px-10">
           <button className="btn flex items-center gap-2">
             <FaEdit />
-            Edit Profile
+            Complete Your Profile
           </button>
           <button className="btn flex items-center gap-2">
             <FaKey />
