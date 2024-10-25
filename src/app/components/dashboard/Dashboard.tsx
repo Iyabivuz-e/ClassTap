@@ -1,4 +1,3 @@
-// Dashboard.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -48,7 +47,7 @@ const Dashboard = () => {
       case "students":
         return <StudentManagement />;
       case "profile":
-        return <Profile />;
+        return <Profile />; // Profile component is rendered here
       case "classes":
         return <Classes />;
       default:
@@ -77,7 +76,8 @@ const Dashboard = () => {
           className={`${clicked ? "ml-0 w-full" : "ml-[200px] flex-1 py-3"}`}
         >
           <div className="shadow-md">
-            <Navbar handleToggle={handleToggle} />
+            <Navbar handleToggle={handleToggle} setRenderComp={setRenderComp} />{" "}
+            {/* Pass function to Navbar */}
           </div>
           {renderComponent()} {/* Render component based on state */}
         </div>

@@ -2,17 +2,19 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import profile from "../../../../../public/images/imggggh.jpg";
+import profile from "../../../../../public/images/profile_default.png";
 import Theme from "@/app/helpers/Themes";
 import Notifications from "./Notifications";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useStudentContext } from "@/app/context/StudentContext";
 
 interface NavBarProp {
   handleToggle: () => void;
+  setRenderComp: (comp: string) => void; // New prop to set rendered component
 }
 
-const Navbar = ({ handleToggle }: NavBarProp) => {
+const Navbar = ({ handleToggle, setRenderComp }: NavBarProp) => {
   const router = useRouter();
   const [notifs, setNotifs] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
@@ -29,17 +31,14 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
     localStorage.setItem("notification-toggled", JSON.stringify(newState));
   };
 
+  const { director } = useStudentContext();
+
   const handleLogOut = async () => {
     try {
-      // Send a request to the server to log out
       const response = await axios.get("/api/directors/auth/logout");
-
-      // Optionally, handle the response message
-      if (response.data.sucess) {
+      if (response.data.success) {
         console.log(response.data.message);
       }
-
-      // Redirect to login or homepage after logout
       router.push("/");
     } catch (error) {
       console.error("Error during logout:", error);
@@ -47,7 +46,7 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
   };
 
   return (
-    <div className="navbar bg-base-100 sticky top-0 ">
+    <div className="navbar bg-base-100 sticky top-0">
       <div className="navbar-start">
         <div className="dropdown" onClick={handleToggle}>
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
@@ -107,7 +106,9 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
                 width={30}
                 height={30}
                 alt="Tailwind CSS Navbar component"
-                src={profile}
+                src={
+                  director?.profilePicture ? director.profilePicture : profile
+                }
               />
             </div>
           </div>
@@ -116,9 +117,10 @@ const Navbar = ({ handleToggle }: NavBarProp) => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
             <li>
-              <a className="justify-between">
+              <a onClick={() => setRenderComp("profile")}>
+                {" "}
+                {/* Trigger Profile render */}
                 Profile
-                <span className="badge">New</span>
               </a>
             </li>
             <li>
