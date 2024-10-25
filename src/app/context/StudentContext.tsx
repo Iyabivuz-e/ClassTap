@@ -25,6 +25,7 @@ interface Address {
   postalCode: string;
 }
 interface Directors {
+  _id: string;
   fullname: string; // ISO date string
   email: string;
   password: string; // Added to match usage in the code
@@ -32,9 +33,9 @@ interface Directors {
   role: string; // Added to match usage in the code
   status: string; // Added to match usage in the code
   phoneNumber: number; // Added to match usage in the code
-  permissions: string[];
+  permissions: string;
   address: Address;
-  profilePicture: string; // Added to match usage in the code
+  profilePicture: null; // Added to match usage in the code
 }
 
 interface Student {

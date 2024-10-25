@@ -6,6 +6,8 @@ import default_profile from "../../../../public/images/profile_default.png";
 import { useStudentContext } from "@/app/context/StudentContext";
 import Loader from "@/app/helpers/Loader";
 import ProfileInformation from "./ProfileInformation";
+import UpdateProfile from "./UpdateProfile";
+
 
 const Profile = () => {
   const { director, loading } = useStudentContext();
@@ -25,22 +27,39 @@ const Profile = () => {
           </span>
         </div>
         {/* Edit */}
-        <div className="flex items-center justify-between w-full gap-1 max-sm:gap-0 px-10">
-          <button className="btn flex items-center gap-2">
+        <div className="flex max-sm:flex-col max-sm:px-2 justify-between w-full gap-2 max-sm:gap-3 px-10">
+          <button
+            className="btn flex items-center gap-2"
+            onClick={() => document.getElementById("my_modal_4").showModal()}
+          >
             <FaEdit />
-            Complete Your Profile
+            Complete/Edit Your Profile
           </button>
+          {/* Open the modal using document.getElementById('ID').showModal() method */}
+          <dialog id="my_modal_4" className="modal">
+            <div className="modal-box w-11/12 max-w-5xl">
+              <UpdateProfile />
+              <div className="modal-action">
+                <form method="dialog">
+                  {/* if there is a button in form, it will close the modal */}
+                  <button className="btn">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
           <button className="btn flex items-center gap-2">
             <FaKey />
             Change Password
           </button>
         </div>
         {/* profile photo and name */}
-        <div className="border-2 border-base-300 border-opacity-30 shadow-md w-full flex justify-between p-4">
+        <div className=" max-sm:flex-col gap-3 max-sm:gap-5 border-2 border-base-300 border-opacity-30 shadow-md w-full flex justify-between p-4">
           <div className="flex items-center gap-5 ">
             <Image
-              src={ director?.profilePicture ? director.profilePicture :
-                default_profile
+              src={
+                director?.profilePicture
+                  ? director.profilePicture
+                  : default_profile
               }
               alt="profile-photo"
               width={80}
@@ -49,9 +68,7 @@ const Profile = () => {
             />
             <div className="flex flex-col gap-1">
               <p className="font-bold text-xl">{director?.fullname}</p>
-              <p className=" text-sm opacity-70">
-                Position: Director of Studies
-              </p>
+              <p className=" text-sm opacity-70">Position: {director?.role}</p>
             </div>
           </div>
           <div className="flex flex-col gap-5">
@@ -62,7 +79,7 @@ const Profile = () => {
             ))}
           </div>
         </div>
-        <ProfileInformation/>
+        <ProfileInformation />
       </div>
     </>
   );

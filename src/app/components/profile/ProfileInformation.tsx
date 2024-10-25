@@ -16,7 +16,7 @@ const ProfileInformation = () => {
   return (
     <>
       {/* profile information */}
-      <div className="flex w-full justify-between gap-4">
+      <div className="flex w-full justify-between gap-4 max-sm:flex-col">
         {/* personal information */}
         <div className="flex flex-col gap-2 border-2 border-base-200 border-opacity-30 shadow-md w-full p-4">
           <h1 className="font-semibold text-2xl">Personal Information</h1>
