@@ -50,7 +50,7 @@ interface StudentContextType {
   directors: Directors[];
   loading: boolean;
   error: string | null;
-  director: Directors[]
+  director: Directors | null
   filteredStudents: Student[]; // New filtered students array
   filterStatus: string; // New filter status
   setFilterStatus: React.Dispatch<React.SetStateAction<string>>; // Function to set filter status
