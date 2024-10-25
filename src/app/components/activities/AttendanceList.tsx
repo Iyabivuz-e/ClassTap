@@ -28,10 +28,6 @@ const AttendanceList = () => {
     return date.toLocaleTimeString("en-US", options);
   };
 
-
-
-
-
   if (error) return <div>Error: {error}</div>;
 
   return (

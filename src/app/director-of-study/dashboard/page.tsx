@@ -4,7 +4,7 @@ import Dashboard from "../../components/dashboard/Dashboard";
 const page = () => {
 
   return (
-    <div>
+    <div className="">
       <Dashboard />
     </div>
   );
