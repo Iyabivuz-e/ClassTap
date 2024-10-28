@@ -13,8 +13,6 @@ const StudentManagement = () => {
   } = useStudentContext(); // Get filtered students from context
   const [allPresent, setAllPresent] = useState<boolean>(false);
 
-  // No need to fetch students here since it's already done in the context API
-
   const markAllStudentsPresent = async () => {
     try {
       const response = await fetch("/api/attendance/logs", {
@@ -44,7 +42,7 @@ const StudentManagement = () => {
     );
   };
 
-  if (loading === null) return <Loader />;
+  if (loading) return <Loader />;
 
 
   return (
@@ -56,7 +54,7 @@ const StudentManagement = () => {
         Manage students&apos; attendeance effortlessly
       </p>
       <div className="flex justify-between gap-2 items-center max-sm:flex-col max-sm:gap-3 max-sm:w-full">
-        <div className="flex btn btn-outline gap-2 items-center cursor-default">
+        <div className="max-sm:w-full flex btn btn-outline gap-2 items-center cursor-default">
           <label className="flex gap-2">
             <input
               type="checkbox"

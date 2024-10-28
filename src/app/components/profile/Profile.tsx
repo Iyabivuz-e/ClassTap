@@ -12,7 +12,7 @@ import UpdateProfile from "./UpdateProfile";
 const Profile = () => {
   const { director, loading } = useStudentContext();
 
-  if (loading === null) return <Loader />;
+  if (loading) return <Loader />;
 
   return (
     <>

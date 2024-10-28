@@ -6,7 +6,7 @@ import ClassAttendance from './ClassAttendance'
 const Classes = () => {
   return (
     <div className="flex flex-col p-5">
-      <h1 className="text-center text-2xl font-semibold">
+      <h1 className="text-center text-3xl font-semibold">
         Manage classes attendance effectively...
       </h1>
       <div className="mt-4 text-sm opacity-70 flex flex-col justify-center items-center">

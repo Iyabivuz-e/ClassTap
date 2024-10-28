@@ -2,12 +2,15 @@
 
 import React, { useState } from "react";
 import { useStudentContext } from "@/app/context/StudentContext";
+import axios from "axios";
 
 const StudentList = () => {
   const { filteredStudents, error, overrideAttendance } = useStudentContext();
   const [manualEntryId, setManualEntryId] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [myError, setMyError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // New state for success message
 
-  // Function to format the time
   const formatTime = (dateString: string): string => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
@@ -18,26 +21,69 @@ const StudentList = () => {
     return date.toLocaleString("en-US", options);
   };
 
-  const handleManualEntry = () => {
-    if (manualEntryId) {
-      // Implement the logic to mark the student as present
-      console.log(`Marking student ${manualEntryId} as present`);
-      // Call your API or update context here
+  const handleManualEntry = async () => {
+    setLoading(true);
+    setMyError(null);
+
+    if (!manualEntryId) {
+      setMyError("No card ID entered.");
+      setLoading(false);
+      return;
     }
+
+    const confirmMarkPresent = window.confirm(
+      "Are you sure you want to mark this student as present?"
+    );
+    if (!confirmMarkPresent) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.post("/api/attendance/logs", {
+        cardId: manualEntryId,
+      });
+
+      if (response.status === 201) {
+        console.log(`Marked student ${manualEntryId} as present`);
+        setSuccessMessage(`Student marked as ${response.data.status} successfully!`);
+
+        setTimeout(() => {
+          setSuccessMessage(null); // Hide the message after 3 seconds
+        }, 3000);
+      } else {
+        setMyError("Attendance already logged");
+      }
+    } catch (error: any) {
+      setMyError(
+        error?.response?.data?.message ||
+          "Attending student failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+
+    setManualEntryId("");
   };
 
   const handleOverrideAttendance = (studentId: string, newStatus: string) => {
-    // Call the context function to override attendance
     overrideAttendance(studentId, newStatus);
   };
 
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="mt-7 -z-50">
-      {/* Manual Entry Section */}
-      <div className="mt-5 mb-3">
-        <h2 className="mb-2">Manual Entry</h2>
+    <div className="mt-7">
+      <h2 className="mb-2">Manual Entry</h2>
+
+      {/* Success Message Popup */}
+      {successMessage && (
+        <div className="fixed top-5 right-5 w-64 p-3 bg-green-500 text-white rounded shadow-lg z-50">
+          <span>{successMessage}</span>
+        </div>
+      )}
+
+      <div className="mt-5 mb-3 flex max-sm:flex-col w-full gap-2">
         <input
           type="text"
           placeholder="Enter student's card Id"
@@ -45,14 +91,49 @@ const StudentList = () => {
           onChange={(e) => setManualEntryId(e.target.value)}
           className="input input-bordered mr-2"
         />
-        <button onClick={handleManualEntry} className="btn cursor-pointer bg-base-300 ">
-          Mark as Present
+        {myError && (
+          <div className="btn btn-error">
+            <span>{myError}</span>
+          </div>
+        )}
+        <button
+          type="submit"
+          onClick={handleManualEntry}
+          className="btn cursor-pointer bg-base-300"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 000 8v4a8 8 0 01-8-8z"
+                ></path>
+              </svg>
+              <p>Mark as Present</p>
+            </>
+          ) : (
+            "Mark as Present"
+          )}
         </button>
       </div>
 
       <div className="overflow-x-auto mt-3">
         <table className="table">
-          {/* Table header */}
           <thead>
             <tr>
               <th>No</th>
@@ -61,21 +142,19 @@ const StudentList = () => {
               <th>Card Id</th>
               <th>Status</th>
               <th>In Time</th>
-              <th>Actions</th> {/* New Actions Column */}
+              <th>Actions</th>
             </tr>
           </thead>
-          {/* Table body */}
           {filteredStudents.length === 0 ? (
             <p>No students found.</p>
           ) : (
             <tbody>
               {filteredStudents.map((student, index) => {
                 const latestAttendance = student.attendance_status.reduce(
-                  (latest, current) => {
-                    return new Date(current.date) > new Date(latest.date)
+                  (latest, current) =>
+                    new Date(current.date) > new Date(latest.date)
                       ? current
-                      : latest;
-                  }
+                      : latest
                 );
 
                 return (
@@ -96,14 +175,12 @@ const StudentList = () => {
                       {latestAttendance ? latestAttendance.status : "Absent"}
                     </td>
                     <td>
-                      {latestAttendance?.status === "present"
-                        ? formatTime(latestAttendance.date)
-                        : latestAttendance?.status === "late"
+                      {latestAttendance?.status === "present" ||
+                      latestAttendance?.status === "late"
                         ? formatTime(latestAttendance.date)
                         : "N/A"}
                     </td>
                     <td>
-                      {/* Override Attendance Button */}
                       <button
                         onClick={() =>
                           handleOverrideAttendance(

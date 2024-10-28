@@ -100,3 +100,10 @@ const AttendanceList = () => {
 };
 
 export default AttendanceList;
+
+
+
+// time: new Date(item.date).toLocaleTimeString([], {
+//         hour: "2-digit",
+//         minute: "2-digit",
+//       }),
