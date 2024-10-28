@@ -3,7 +3,7 @@
 import Attendances from "./models/Attendances";
 import Students from "./models/Students";
 
-// Function to reset attendance at the end of the day (could be scheduled via cron job)
+// Function to reset attendance at the end of the day to be scheduled via cron job
 export async function resetAttendanceForNewDay() {
   try {
     const today = new Date();
@@ -14,7 +14,7 @@ export async function resetAttendanceForNewDay() {
 
     // Find all students who haven't recorded attendance for today
     const studentsWithoutAttendance = await Students.find({
-      "attendance_status.date": { $lt: today }, // Filter for older attendance records
+      "attendance_status.date": { $ne: today }, // Filter for older attendance records
     });
 
     // Mark those students as absent for today

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useStudentContext } from "@/app/context/StudentContext";
 import ClassAttendanceTable from "./ClassAttendanceTable";
+import Loader from "@/app/helpers/Loader";
 
 // Reusable Dropdown Component
 interface DropdownProps {
@@ -28,11 +29,8 @@ const ClassAttendance: React.FC = () => {
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [selectedCourse, setSelectedCourse] = useState<string>("");
 
-  const {
-    fetchAttendanceByClassAndCourse,
-    loading,
-    error,
-  } = useStudentContext();
+  const { fetchAttendanceByClassAndCourse, loading, error } =
+    useStudentContext();
 
   useEffect(() => {
     if (selectedClass && selectedCourse) {
@@ -57,7 +55,7 @@ const ClassAttendance: React.FC = () => {
   const courseOptions = ["Software", "Networking", "Business"];
 
   if (loading) {
-    return <div>Loading attendance...</div>;
+    return <Loader />;
   }
 
   if (error) {
@@ -65,39 +63,53 @@ const ClassAttendance: React.FC = () => {
   }
 
   return (
-    <div className="mt-6 flex flex-col justify-center">
-      {/* Class and Course Dropdowns */}
-      <div className="flex space-x-4">
-        {classOptions.map((classOption) => (
-          <Dropdown
-            key={classOption}
-            label={classOption}
-            options={courseOptions}
-            onSelect={(course) => {
-              setSelectedClass(classOption);
-              setSelectedCourse(course);
-            }}
+    <>
+      <div className="mt-6 flex flex-col justify-center">
+        {/* Class and Course Dropdowns */}
+        <div className="flex space-x-4">
+          {classOptions.map((classOption) => (
+            <Dropdown
+              key={classOption}
+              label={classOption}
+              options={courseOptions}
+              onSelect={(course) => {
+                setSelectedClass(classOption);
+                setSelectedCourse(course);
+              }}
+            />
+          ))}
+        </div>
+        <div>
+          <h1 className="mt-3 text-lg font-semibold">Class and Course Selected</h1>
+          {!selectedClass || !selectedCourse ? (
+            <small>No selected class or course</small>
+          ) : (
+            <div className="">
+              <div className="flex mt-2 gap-3">
+                <button className="btn bg-neutral text-slate-300">{selectedClass}</button>
+                <button className="btn bg-neutral text-slate-300">{selectedCourse}</button>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Attendance Table */}
+        <table className="table mt-5">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Student Name</th>
+              <th>Student Id</th>
+              <th>Card Id</th>
+              <th>Status</th>
+              <th>In Time</th>
+            </tr>
+          </thead>
+          <ClassAttendanceTable
+            extractAttendanceDetails={extractAttendanceDetails}
           />
-        ))}
+        </table>
       </div>
-
-      {/* Attendance Table */}
-      <table className="table mt-5">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Student Name</th>
-            <th>Student Id</th>
-            <th>Card Id</th>
-            <th>Status</th>
-            <th>In Time</th>
-          </tr>
-        </thead>
-        <ClassAttendanceTable
-          extractAttendanceDetails={extractAttendanceDetails}
-        />
-      </table>
-    </div>
+    </>
   );
 };
 

@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
                   status: recentAttendance.status,
                 },
               ]
-            : [], // If no attendance found, return an empty array
+            : [], 
         };
       })
     );

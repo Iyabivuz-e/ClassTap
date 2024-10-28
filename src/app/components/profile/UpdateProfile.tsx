@@ -238,7 +238,7 @@ const UpdateProfile: React.FC = () => {
 
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Role</span>
+              <span className="label-text font-semibold">Status</span>
             </label>
             <input
               type="text"

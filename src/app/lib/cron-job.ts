@@ -1,10 +1,10 @@
 import cron from "node-cron";
 import { resetAttendanceForNewDay } from "./resetAttendance";
 
-// Add initial log to confirm cron job registration
-console.log("Scheduling attendance reset task...");
+// // Add initial log to confirm cron job registration
+// console.log("Scheduling attendance reset task...");
 
-// Schedule task to run every day at 9:14 AM
+// Schedule task to run every day at 23:59 AM
 cron.schedule(
   "59 23 * * *",
   async () => {
@@ -17,6 +17,6 @@ cron.schedule(
     }
   },
   {
-    timezone: "Africa/Kigali", // Ensure this timezone is supported in your environment
+    timezone: "Africa/Kigali", 
   }
 );
