@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     if (!attendance) {
       attendance = new Attendances({
         studentId: student._id,
-        timestamp: attendanceTimestamp,
+        timestamp: attendanceTimestamp.toISOString(),
         status,
       });
 
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       // If the status has changed (e.g., "present" to "late"), update it
       if (attendance.status !== status) {
         attendance.status = status;
-        attendance.timestamp = attendanceTimestamp; // Update timestamp if needed
+        attendance.timestamp = attendanceTimestamp.toISOString(); // Update timestamp if needed
         await attendance.save();
       } else {
         // If attendance already exists with the same status, don't log it again

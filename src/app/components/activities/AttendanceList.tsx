@@ -10,14 +10,13 @@ const AttendanceList = () => {
   // Fetch today's attendance when the component mounts
   useEffect(() => {
     fetchTodaysAttendance();
-  }, []); 
-
+  }, []);
 
   // Function to format the time
   const formatTime = (dateString: string): string => {
-    const date = new Date(dateString); // Remove "Z" from the date string handling
+    const date = new Date(dateString); // Use full timestamp
     if (isNaN(date.getTime())) {
-      return "Invalid Date"; // Handle invalid date
+      return "Invalid Date";
     }
     const options: Intl.DateTimeFormatOptions = {
       hour: "2-digit",
@@ -52,17 +51,31 @@ const AttendanceList = () => {
           ) : (
             <tbody>
               {filteredStudents.map((student, index) => {
+                const defaultAttendanceStatus = {
+                  date: "1970-01-01T00:00:00Z",
+                  status: "Absent",
+                };
+
                 const latestAttendance = student.attendance_status.reduce(
                   (latest, current) => {
-                    return new Date(current.date) > new Date(latest.date)
+                    console.log(
+                      "ATTENDANCE TIMEEEE: " + new Date(latest.date).getTime()
+                    );
+
+                    // Ensure both dates are compared in the same format
+                    return new Date(current.date).getTime() >
+                      new Date(latest.date).getTime()
                       ? current
                       : latest;
                   },
-                  { date: "1970-01-01T00:00:00Z", status: "absent" }
+                  defaultAttendanceStatus
                 );
-                // console.log("Attendance date:", latestAttendance.date);
-                const formattedTime = formatTime(latestAttendance.date);
-                console.log("Formatted time:", formattedTime);
+
+                console.log("ATTENDANCE STATUS: " + latestAttendance.date);
+
+                const attendanceStatus = latestAttendance
+                  ? latestAttendance.status
+                  : "Absent";
 
                 return (
                   <tr key={index} className="bg-base-200">
@@ -72,19 +85,18 @@ const AttendanceList = () => {
                     <td>{student.card_id}</td>
                     <td
                       className={
-                        latestAttendance?.status === "present"
+                        attendanceStatus === "present"
                           ? "text-green-500 font-semibold"
-                          : latestAttendance?.status === "late"
+                          : attendanceStatus === "late"
                           ? "text-yellow-500 font-semibold"
                           : "text-red-500 font-semibold"
                       }
                     >
-                      {latestAttendance ? latestAttendance.status : "Absent"}
+                      {attendanceStatus}
                     </td>
                     <td>
-                      {latestAttendance?.status === "present"
-                        ? formatTime(latestAttendance.date)
-                        : latestAttendance?.status === "late"
+                      {attendanceStatus === "present" ||
+                      attendanceStatus === "late"
                         ? formatTime(latestAttendance.date)
                         : "N/A"}
                     </td>
@@ -100,8 +112,6 @@ const AttendanceList = () => {
 };
 
 export default AttendanceList;
-
-
 
 // time: new Date(item.date).toLocaleTimeString([], {
 //         hour: "2-digit",

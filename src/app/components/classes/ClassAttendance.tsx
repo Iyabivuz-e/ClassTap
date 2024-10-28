@@ -86,8 +86,9 @@ const ClassAttendance: React.FC = () => {
           ) : (
             <div className="">
               <div className="flex mt-2 gap-3">
-                <button className="btn bg-neutral text-slate-300">{selectedClass}</button>
-                <button className="btn bg-neutral text-slate-300">{selectedCourse}</button>
+                <button className="btn-sm rounded-full bg-neutral text-slate-300">{selectedClass}</button> 
+                <button className="font-extrabold">:</button>
+                <button className="btn-sm rounded-full bg-neutral text-slate-300">{selectedCourse}</button>
               </div>
             </div>
           )}

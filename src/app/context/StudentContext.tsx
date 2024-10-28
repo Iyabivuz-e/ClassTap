@@ -183,7 +183,8 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [students]); // Add necessary dependencies
 
   // ***************Filter and search logic*********************
-  const today = new Date().toISOString().split("T")[0]; // Format as 'YYYY-MM-DD'
+  const today = new Date().toISOString(); // Full date and time in ISO format
+  console.log("TODAY: ", today);
 
   const filteredStudents = students.filter((student) => {
     // Check if filterStatus is "absent" and ensure at least one entry matches today's date and "absent" status
@@ -191,15 +192,21 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
       !filterStatus || // If no filter is applied, include all students
       (filterStatus === "absent" &&
         student.attendance_status.some((status) => {
-          const attendanceDate = new Date(status.date)
-            .toISOString()
-            .split("T")[0]; // Extract the date part
-          return status.status === "absent" && attendanceDate === today; // Match today's "absent" records
+          // Parse the attendance date, accommodating both formats
+          const attendanceDateTime = new Date(status.date).toISOString();
+          return (
+            status.status === "absent" &&
+            attendanceDateTime.startsWith(today.split("T")[0]) // Match today's date
+          );
         })) ||
       (filterStatus !== "absent" &&
-        student.attendance_status.some(
-          (status) => status.status === filterStatus
-        ));
+        student.attendance_status.some((status) => {
+          const attendanceDateTime = new Date(status.date).toISOString(); // Normalize format
+          return (
+            status.status === filterStatus &&
+            attendanceDateTime.startsWith(today.split("T")[0])
+          ); // Ensure the date matches today
+        }));
 
     // Check if the student's name, card ID, or student ID matches the search query
     const studentName = student.student_name || ""; // Default to an empty string if undefined
@@ -211,6 +218,18 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
     // Only include students who match both the filter and the search query
     return isStatusMatch && isNameMatch;
   });
+
+  // Log attendance records, ensuring the full date format is used
+  console.log(
+    "Attendance from context: ",
+    filteredStudents.map(
+      (student) =>
+        student.attendance_status.map((status) =>
+          new Date(status.date).toISOString()
+        ) // Use full ISO format
+    )
+  );
+
 
   // ***************GETTING STUDENT'S ATTENDANCE BY THEIR CLASSES*********************
   const fetchAttendanceByClassAndCourse = async (
@@ -246,6 +265,7 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
         filteredStudents,
         filterStatus,
         director,
+        directors,
         setFilterStatus,
         searchQuery,
         setSearchQuery,
