@@ -7,24 +7,25 @@ const AttendanceList = () => {
   const { filteredStudents, error, fetchTodaysAttendance } =
     useStudentContext();
 
-  // Fetch today's attendance when the component mounts
   useEffect(() => {
     fetchTodaysAttendance();
   }, []);
 
-  // Function to format the time
   const formatTime = (dateString: string): string => {
-    const date = new Date(dateString); // Use full timestamp
-    if (isNaN(date.getTime())) {
+    try {
+      const date = new Date(dateString);
+
+      // Format time in Kigali timezone
+      return new Date(date).toLocaleTimeString("en-US", {
+        timeZone: "Africa/Kigali",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+    } catch (error) {
+      console.error("Error formatting date:", error);
       return "Invalid Date";
     }
-    const options: Intl.DateTimeFormatOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    };
-    return date.toLocaleTimeString("en-US", options);
   };
 
   if (error) return <div>Error: {error}</div>;
@@ -112,8 +113,3 @@ const AttendanceList = () => {
 };
 
 export default AttendanceList;
-
-// time: new Date(item.date).toLocaleTimeString([], {
-//         hour: "2-digit",
-//         minute: "2-digit",
-//       }),

@@ -11,8 +11,8 @@ export async function POST(request: NextRequest) {
   const reqBody = await request.json();
 
   try {
-    const { cardId, timestamp, markAllPresent } = reqBody;
-
+    const { cardId, markAllPresent } = reqBody;
+    
     if (markAllPresent) {
       return await markAllStudentsPresent();
     }
@@ -30,48 +30,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Invalid card ID" }, { status: 404 });
     }
 
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0); // Start of the day (midnight)
+    // Get current time in Kigali
+    const now = new Date();
+    const kigaliTime = new Date(
+      now.toLocaleString("en-US", { timeZone: "Africa/Kigali" })
+    );
 
-    const todayEnd = new Date();
-    todayEnd.setHours(23, 59, 59, 999); // End of the day
+    const todayStart = new Date(kigaliTime);
+    todayStart.setHours(0, 0, 0, 0);
 
-    const attendanceTimestamp = timestamp ? new Date(timestamp) : new Date();
+    const todayEnd = new Date(kigaliTime);
+    todayEnd.setHours(23, 59, 59, 999);
 
-    const entranceTimeEnd = new Date();
-    entranceTimeEnd.setHours(12, 0, 0, 0); // End of entrance period (12:00 PM)
+    const entranceTimeEnd = new Date(kigaliTime);
+    entranceTimeEnd.setHours(12, 0, 0, 0);
 
-    const status = attendanceTimestamp > entranceTimeEnd ? "late" : "present";
+    const status = kigaliTime > entranceTimeEnd ? "late" : "present";
 
-
-    // Check if the student already has attendance logged today
+    // Check for existing attendance
     let attendance = await Attendances.findOne({
       studentId: student._id,
-      timestamp: { $gte: todayStart, $lte: todayEnd }, // Ensure it's today's attendance
+      timestamp: { $gte: todayStart, $lte: todayEnd },
     });
 
-    // If no attendance record exists for today, create a new one
     if (!attendance) {
       attendance = new Attendances({
         studentId: student._id,
-        timestamp: attendanceTimestamp.toISOString(),
+        timestamp: kigaliTime,
         status,
       });
 
       await attendance.save();
     } else {
-      // If the status has changed (e.g., "present" to "late"), update it
       if (attendance.status !== status) {
         attendance.status = status;
-        attendance.timestamp = attendanceTimestamp.toISOString(); // Update timestamp if needed
+        attendance.timestamp = kigaliTime;
         await attendance.save();
       } else {
-        // If attendance already exists with the same status, don't log it again
         return NextResponse.json(
           {
             message: `Attendance already logged as ${status}`,
             studentName: student.student_name,
             attendanceId: attendance._id,
+            timestamp: attendance.timestamp,
           },
           { status: 200 }
         );
@@ -84,6 +85,7 @@ export async function POST(request: NextRequest) {
         studentName: student.student_name,
         attendanceId: attendance._id,
         status: attendance.status,
+        timestamp: attendance.timestamp,
       },
       { status: 201 }
     );
@@ -114,3 +116,6 @@ export async function GET() {
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }
+
+
+

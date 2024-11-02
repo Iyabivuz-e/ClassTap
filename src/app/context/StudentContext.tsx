@@ -111,6 +111,7 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
         if (!attendanceResponse.ok)
           throw new Error("Failed to fetch attendance");
         const attendanceData = await attendanceResponse.json();
+        console.log("Attendance Object: ", attendanceData)
 
         // Merge attendance data with students
         // After fetching attendance data and merging
@@ -162,12 +163,22 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
     fetchStudentsAndAttendance();
   }, []); // Only run once on component mount
 
+
   //****************FETCHING TODAY'S ATTENDANCE WITH CALLBACK TO AVOID DATA REDUNCANCY************* */
   const fetchTodaysAttendance = useCallback(async () => {
     try {
       const response = await fetch("/api/attendance/logs");
       if (!response.ok) throw new Error("Failed to fetch today's attendance");
       const data = await response.json();
+      // Convert timestamps to Kigali timezone
+      const formattedData = data.attendance.map((attendance) => ({
+        ...attendance,
+        date: new Date(attendance.timestamp).toLocaleString("en-US", {
+          timeZone: "Africa/Kigali",
+        }),
+      }));
+
+      return formattedData;
 
       // handle attendance data
     } catch (error) {
@@ -217,18 +228,9 @@ export const StudentProvider: React.FC<{ children: React.ReactNode }> = ({
 
     // Only include students who match both the filter and the search query
     return isStatusMatch && isNameMatch;
-  });
 
-  // Log attendance records, ensuring the full date format is used
-  console.log(
-    "Attendance from context: ",
-    filteredStudents.map(
-      (student) =>
-        student.attendance_status.map((status) =>
-          new Date(status.date).toISOString()
-        ) // Use full ISO format
-    )
-  );
+    
+  });
 
 
   // ***************GETTING STUDENT'S ATTENDANCE BY THEIR CLASSES*********************

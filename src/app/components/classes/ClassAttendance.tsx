@@ -47,7 +47,7 @@ const ClassAttendance: React.FC = () => {
       time: new Date(item.date).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
-      }), // Extract only hour and minute
+      }),
     }));
   };
 

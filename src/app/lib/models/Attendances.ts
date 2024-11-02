@@ -13,7 +13,13 @@ const AttendanceSchema: Schema<IAttendance> = new Schema({
     ref: "Student",
     required: true,
   }, // Reference to Student schema
-  timestamp: { type: Date, required: true, default: Date.now },
+  timestamp: {
+    type: Date,
+    required: true,
+    set: function (v: Date) {
+      return new Date(v.toLocaleString("en-US", { timeZone: "Africa/Kigali" }));
+    },
+  },
   status: {
     type: String,
     default: "absent",

@@ -1,8 +1,7 @@
-// Notifications.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
 interface Notification {
   studentName: string;
@@ -11,36 +10,58 @@ interface Notification {
 }
 
 const Notifications = ({ notifs }: { notifs: boolean }) => {
-
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const eventSource = new EventSource("/api/attendance/notifications");
+    // Initialize socket connection
+    const socketInstance = io("http://localhost:4000", {
+      reconnectionDelay: 1000,
+      reconnection: true,
+      reconnectionAttempts: 10,
+      transports: ["websocket"],
+      agent: false,
+      upgrade: false,
+      rejectUnauthorized: false,
+    });
 
-    // Listen for incoming messages
-   eventSource.onmessage = (event) => {
-     console.log("Received message:", event.data); // Log the received message
-     try {
-       const data: Notification = JSON.parse(event.data);
-       setNotifications((prev) => [...prev, data]);
-     } catch (error) {
-       console.error("Error parsing event data:", error);
-     }
-   };
-    // Clean up when the component unmounts
+    // Set socket instance
+    setSocket(socketInstance);
+
+    // Listen for attendance notifications
+    socketInstance.on("attendance-notification", (data: Notification) => {
+      console.log("Received notification:", data);
+      setNotifications((prev) => [...prev, data]);
+    });
+
+    // Connection event handlers
+    socketInstance.on("connect", () => {
+      console.log("Connected to WebSocket server");
+    });
+
+    socketInstance.on("connect_error", (error) => {
+      console.error("WebSocket connection error:", error);
+    });
+
+    // Cleanup on unmount
     return () => {
-      eventSource.close();
+      if (socketInstance) {
+        socketInstance.disconnect();
+      }
     };
-  }, []);
-  // console.log("Student entered: ", notifications);
+  }, []); // Empty dependency array means this runs once on mount
 
-  
+  socket?.emit("new-attendance", {
+    studentName: "John Doe",
+    status: "present",
+    timestamp: Date.now(),
+  });
+
   return (
     <div
       className={`${
         notifs ? "opacity-100 " : "opacity-0"
-      } rounded-md flex transition-all flex-col duration-400 bg-base-200 shadow-md h-[500px] w-[400px] max-sm:w-full absolute top-[70px] max-sm:right-0 right-3 px-2 overflow-scroll
-      `}
+      } rounded-md flex transition-all flex-col duration-400 bg-base-200 shadow-md h-[500px] w-[400px] max-sm:w-full absolute top-[70px] max-sm:right-0 right-3 px-2 overflow-scroll`}
     >
       <div className="flex justify-between gap-2 items-center w-full py-4">
         <h1 className="text-3xl max-sm:text-xl font-bold">Notifications</h1>

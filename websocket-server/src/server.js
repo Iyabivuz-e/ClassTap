@@ -1,13 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpServer = exports.io = void 0;
 var express_1 = require("express");
 var http_1 = require("http");
 var socket_io_1 = require("socket.io");
 // Initialize express app
 var app = (0, express_1.default)();
 var httpServer = (0, http_1.createServer)(app);
-exports.httpServer = httpServer;
 // Configuration
 var PORT = process.env.SOCKET_PORT || 4000;
 var CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
@@ -21,7 +19,6 @@ var io = new socket_io_1.Server(httpServer, {
     pingTimeout: 60000, // How long to wait before considering connection closed
     pingInterval: 25000, // How often to ping the client
 });
-exports.io = io;
 // Keep track of connected clients
 var connectedClients = new Set();
 // Middleware for logging
@@ -84,3 +81,5 @@ process.on("SIGTERM", function () {
         process.exit(0);
     });
 });
+// Export for potential testing or external use
+exports.default = { io: io, httpServer: httpServer };
