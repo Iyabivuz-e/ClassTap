@@ -8,6 +8,8 @@ const ProfileInformation = () => {
   const { director, loading } = useStudentContext();
   const [showPassword, setShowPassword] = useState(false);
 
+  console.log(director)
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -58,7 +60,7 @@ const ProfileInformation = () => {
         </div>
         {/* personal information */}
 
-        <div className="flex flex-col gap-2 border-2 border-base-200 border-opacity-30 shadow-md w-full p-4">
+        {/* <div className="flex flex-col gap-2 border-2 border-base-200 border-opacity-30 shadow-md w-full p-4">
           <h1 className="font-semibold text-2xl">Address</h1>
           <div
             key={director?.address.city}
@@ -81,7 +83,7 @@ const ProfileInformation = () => {
               {director?.address.postalCode}
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
