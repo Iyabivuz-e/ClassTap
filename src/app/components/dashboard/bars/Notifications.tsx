@@ -61,7 +61,7 @@ const Notifications = ({ notifs }: { notifs: boolean }) => {
     <div
       className={`${
         notifs ? "opacity-100 " : "opacity-0"
-      } rounded-md flex transition-all flex-col duration-400 bg-base-200 shadow-md h-[500px] w-[400px] max-sm:w-full absolute top-[70px] max-sm:right-0 right-3 px-2 overflow-scroll`}
+      } rounded-md -z-0 flex transition-all flex-col duration-400 bg-base-200 shadow-md h-[500px] w-[400px] max-sm:w-full absolute top-[70px] max-sm:right-0 right-3 px-2 overflow-scroll`}
     >
       <div className="flex justify-between gap-2 items-center w-full py-4">
         <h1 className="text-3xl max-sm:text-xl font-bold">Notifications</h1>

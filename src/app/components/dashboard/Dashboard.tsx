@@ -9,6 +9,7 @@ import StudentManagement from "../student-management/StudentManagement";
 import Profile from "../profile/Profile";
 import { usePathname } from "next/navigation";
 import Classes from "../classes/Classes";
+import AddStudentPage from "../add-students/AddStudents";
 
 const Dashboard = () => {
   const pathname = usePathname();
@@ -50,6 +51,8 @@ const Dashboard = () => {
         return <Profile />; // Profile component is rendered here
       case "classes":
         return <Classes />;
+      case "add-student":
+        return <AddStudentPage />;
       default:
         return <Activity />;
     }

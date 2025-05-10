@@ -38,12 +38,20 @@ export default function HomePage() {
             <Theme />
           </div>
           <Home />
-          <aside className="opacity-50 my-2 text-sm px-2 text-center">
+          {/* <aside className="opacity-50 my-2 text-sm px-2 text-center bg-red-500">
             <p>
               Copyright © {new Date().getFullYear()} - All rights reserved by
               CLASSTAP Industries Ltd
             </p>
-          </aside>
+          </aside> */}
+          <footer className="footer py-6 mt-4 -mb-16 grid grid-rows-[auto-1fr-auto] text-neutral-content justify-center items-center max-md:flex max-sm:flex-col max-sm:gap-4 max-md:px-5 w-full">
+            <aside className="grid-flow-col items-center">
+              <p>
+                Copyright © {new Date().getFullYear()} - All rights reserved by
+                CLASSTAP Industries Ltd
+              </p>
+            </aside>
+          </footer>
         </div>
       )}
     </>
